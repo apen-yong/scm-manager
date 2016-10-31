@@ -1,0 +1,146 @@
+{% extends "system.html" %}
+{% block title %} Welcome {% endblock %}
+{% block content %}
+
+    <h3 id="node" value="testinfo" class="text-muted">{{ system }} 新建war包：</h3>
+    <hr/>
+    <div class="col-md-10">
+        <table class="table table-striped table-hove" role="table" style="font-size:9pt">
+            <tr>
+                <th>任务名称</th>
+                <th>状态</th>
+                <th>上次成功</th>
+                <th>上次失败</th>
+                <th>上次打包耗时</th>
+                <th>操作</th>
+            </tr>
+                <tr>
+                    <td id=jobname>{{ system }}</td>
+                    <td id=status_html_{{ system }}></td>
+                    <td>
+                        {{ system }}, 序号:
+                        <!-- Split button -->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary btn-xs "><b>
+                                #{{ system }}</b></button>
+                            <button type="button" class="btn btn-primary dropdown-toggle btn-xs " data-toggle="dropdown"
+                                    aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a data-toggle="modal" data-target=".bs-example-modal-lg"
+                                       data-jobid={{ system }}>
+                                    <small>查看本次控制台输出</small>
+                                </a></li>
+                                <li><a href="#">
+                                    <small>更新了那些文件</small>
+                                </a></li>
+                                <li><a href="#">
+                                    <small>下载这个war包</small>
+                                </a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">
+                                    <small>删除我</small>
+                                </a></li>
+                            </ul>
+                        </div>
+
+                    </td>
+                    <td>
+                        {{ system }} 序号:
+
+                        <!-- Split button -->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger btn-xs "><b>
+                                #{{ system }}</b></button>
+                            <button type="button" class="btn btn-danger dropdown-toggle btn-xs " data-toggle="dropdown"
+                                    aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a data-toggle="modal" data-target=".bs-example-modal-lg"
+                                       data-jobid={{ system}}>
+                                    <small>查看本次控制台输出</small>
+                                </a></li>
+                                <li><a href="#">
+                                    <small>更新了那些文件</small>
+                                </a></li>
+                                <li><a href="#">
+                                    <small>下载这个war包</small>
+                                </a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">
+                                    <small>删除我</small>
+                                </a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>{{ system }}秒</td>
+                    <td>
+                        <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm">
+                            新建war包
+                        </button>
+                    </td>
+                </tr>
+        </table>
+
+    </div>
+    <!-- Large modal -->
+    <div class="modal fade bs-example-modal-lg" id="console" tabindex="-1" role="dialog"
+         aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">控制台输出日志</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="console_body"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框（Modal） -->
+
+    <div class="modal fade" id="myconfirm" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close"
+                            data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                        确认操作吗？
+                    </h4>
+                </div>
+                <div class="modal-body">
+                    <p id="deploy_body">确认后将会开始一次新的打包操作，开始之前请确认本次操作！</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal"  style="display: none;" id="force_commit" onclick="force_commit()">强制提交
+                    </button>
+                    <button type="button" class="btn btn-default"
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="submit" data-loading-text="Loading..."
+                            autocomplete="off" onclick="get_confirm()">
+                        提交更改
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div></div>
+    <!-- /.modal-content -->
+{% endblock %}

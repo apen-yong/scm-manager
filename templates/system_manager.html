@@ -1,0 +1,112 @@
+{% extends "system.html" %}
+{% block title %} 系统管理 {% endblock %}
+{% block content %}
+    <script xmlns="http://www.w3.org/1999/html">
+        function get_confirm(b) {
+            var cmd = $$('#cmd').text();
+            var $$btn = $$('#submit').button('loading');
+            if (cmd == "启动") {
+                exec = "startProcessGroup"
+            } else {
+                exec = "stopProcessGroup"
+            }
+            $$.get("/workinfo?name=$w_info[0].get('group')&p=gearman_worker&query=" + exec + "&server=$m_server",
+                    function (data, status) {
+                        if (status == "success") {
+                            $$btn.button('reset')
+                            $$('#myconfirm').modal('hide');
+                            location.reload();
+                            //     		alert("1:" + cmd);
+                        } else {
+                            alert("2:" + status);
+                        }
+                    }
+            );
+        }
+
+        function stop_start(cmd) {
+            if (cmd == "start") {
+                var info = "启动";
+            } else {
+                var info = "停止";
+            }
+            $$('#cmd').text(info);
+        }
+    </script>
+
+        <h3 id="node" value="testinfo" class="text-muted">{{ system }} 进程信息：</h3>
+        <hr/>
+        <div class="col-md-10">
+        <div class="col-md-5">
+            <h4 id="node" value="testinfo" class="text-muted">{{ system }} node01：</h4>
+            <form action="/gearman_cmd" method="get">
+                <table class="table table-striped table-hove table-condensed" role="table" style="font-size:8pt">
+                    <tr>
+                        <th>项目</th>
+                        <th>状态</th>
+                    </tr>
+                    <tr>
+                        <td>Java进程 PID</td>
+                        <td>12345</td>
+                    </tr>
+                    <tr>
+                        <td>Tomcat 运行时间</td>
+                        <td>12345</td>
+                    </tr>
+                    <tr>
+                        <td>内存分配</td>
+                        <td>RES:100 RSS:2233</td>
+                    </tr>
+                    <tr>
+                        <td>服务器负载</td>
+                        <td>5 10 15</td>
+                    </tr>
+                    <tr>
+                        <td>执行命令</td>
+                        <td>
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
+                                    onclick="stop_start('start')">START
+                            </button>
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
+                                    onclick="stop_start('stop')">STOP
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+        </div>
+        <div align='center' class="col-md-10">
+            </form>
+
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="myconfirm" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close"
+                                    data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                确认操作吗？
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            确认后将会对$m_server上运行的所有$w_info[0].get('group')进行<b id="cmd">none</b>操作！
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default"
+                                    data-dismiss="modal">关闭
+                            </button>
+                            <button type="button" class="btn btn-primary" id="submit" data-loading-text="Loading..."
+                                    autocomplete="off" onclick="get_confirm('b')">
+                                提交更改
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+
+                </br></br>
+            </div>
+        </div>
+{% endblock %}

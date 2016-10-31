@@ -1,0 +1,11 @@
+.login-content {
+  position: relative;
+  width: 320px;
+  margin: 0 auto;
+  text-align: left;
+  padding: 20px 0;
+  -moz-transition: all 550ms ease-in-out;
+  -o-transition: all 550ms ease-in-out;
+  -webkit-transition: all 550ms ease-in-out;
+  transition: all 550ms ease-in-out;
+}

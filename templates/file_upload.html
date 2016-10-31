@@ -1,0 +1,28 @@
+{% extends "system.html" %}
+{% block title %} Welcome {% endblock %}
+{% block content %}
+    <h3 id="node" value="testinfo" class="text-muted">{{ system }} 单个文件更新：</h3>
+    <hr/>
+    <div class="col-md-9">
+    <form class="form-group-sm" role="form" method=POST enctype=multipart/form-data action="{{ url_for('dashboard.upload') }}">
+        <div class="form-group">
+            <label for="exampleInputFile">请选择需要更新的文件包：</label>
+            <input type="file" id="exampleInputFile" multiple="" name="zipfile">
+            <p class="help-block"><small>只允许上传zip格式的文件</small></p>
+        </div>
+        <div class="radio">
+            <label>
+            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+            更新到{{ system }}的QA服务器
+            </label>
+        </div>
+        <div class="radio">
+            <label>
+            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+            更新到{{ system }}的正式服务器
+            </label>
+        </div>
+            <button type="submit" class="btn btn-sm btn-primary">upload</button>
+    </form>
+    </div>
+{% endblock %}

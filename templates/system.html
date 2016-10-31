@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %} Welcome {% endblock %}
+{% block sitemenu %}
+    <div class="col-md-2">
+        <h4>功能选择</h4>
+        <ul class="nav nav-pills nav-stacked" role="tablist">
+            <li><a href="{{ url_for('dashboard.server_status', system=system, type="qa") }}">测试环境管理<span
+                    class="glyphicon glyphicon-eye-open pull-right"></span></a></li>
+            <li><a href="{{ url_for('dashboard.server_status', system=system, type="prod") }}">正式环境管理<span
+                    class="glyphicon glyphicon-wrench pull-right"></span></a></li>
+            <li class="disabled"><a href="{{ url_for('dashboard.taillog', system=system) }}">日志查看<span
+                    class="glyphicon glyphicon-hand-up pull-right"></span></a></li>
+            <li><a href="{{ url_for('dashboard.deploy', system=system) }}">Jenkins代码打包<span
+                    class="glyphicon glyphicon-compressed pull-right"></span></a></li>
+            <li><a href="{{ url_for('dashboard.zipfile', system=system) }}">单个文件更新<span
+                    class="glyphicon glyphicon-refresh pull-right"></span></a></li>
+        </ul>
+    </div>
+{% endblock sitemenu %}
+{% block content %} {% endblock %}

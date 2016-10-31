@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    {% block head %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}"/>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+        <title>{% block title %}Code Pub{% endblock %} - SVN tools</title>
+    {% endblock %}
+</head>
+
+<body>
+<div class="container">
+    <div id="navigator">
+        {% block navigator %}
+            <div class="page-header">
+                <h3>Genscript svn tool
+                    <small>v2.0 <p class="text-right" style="font-size:9pt">你好，{{ current_user.username }} <a
+                            href="#">登出</a></p></small>
+                </h3>
+            </div>
+
+            <ul class="nav nav-tabs" role="tablist">
+                <li class=><a href="/">首页</a></li>
+                <li class="active"><a href="{{ url_for("dashboard.show", system= "usorder") }}">US Order</a></li>
+                <li class=><a href="{{ url_for("dashboard.show", system= "cnorder") }}">CN Order</a></li>
+                <li class=><a href="{{ url_for("dashboard.show", system= "jporder") }}">JP Order</a></li>
+                <li class=><a href="{{ url_for("dashboard.show", system= "shipping") }}">Shipping</a></li>
+                <li class=><a href="{{ url_for("dashboard.show", system="mes") }}">MES</a></li>
+            </ul>
+            </div>
+        {% endblock %}
+
+    <div class="row">
+        <div id="sitemenu">
+            {% block sitemenu %}
+            {% endblock %}
+        </div>
+        <div id="content">{% block content %}{% endblock %}</div>
+
+        <div id="footer">
+            {% block footer %}
+                <div class="col-md-12">
+                    <h6 class="text-center">Created On 20150401
+                        <small> @author: follow <a id=time></a></small>
+                    </h6>
+                </div>
+                <!-- Bootstrap core JavaScript
+                ================================================== -->
+                <!-- Placed at the end of the document so the pages load faster -->
+                <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+                <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+                <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+                <script src="{{ url_for('static', filename='js/my_code_pub.js') }}"></script>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+</div>
+</body>
+
