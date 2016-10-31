@@ -14,15 +14,16 @@
                 <th>上次打包耗时</th>
                 <th>操作</th>
             </tr>
+            {% for env in deploy_env %}
                 <tr>
-                    <td id=jobname>{{ system }}</td>
-                    <td id=status_html_{{ system }}></td>
+                    <td id=jobname>{{ system }}-{{ env }}</td>
+                    <td id=status_html_{{ system }}-{{ env }}>UNKNOW</td>
                     <td>
-                        {{ system }}, 序号:
+                        {{ system }}-{{ env }}, 序号:
                         <!-- Split button -->
                         <div class="btn-group">
                             <button type="button" class="btn btn-primary btn-xs "><b>
-                                #{{ system }}</b></button>
+                                #{{ "10" }}</b></button>
                             <button type="button" class="btn btn-primary dropdown-toggle btn-xs " data-toggle="dropdown"
                                     aria-expanded="false">
                                 <span class="caret"></span>
@@ -30,7 +31,7 @@
                             </button>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a data-toggle="modal" data-target=".bs-example-modal-lg"
-                                       data-jobid={{ system }}>
+                                       data-jobid={{ "11" }}>
                                     <small>查看本次控制台输出</small>
                                 </a></li>
                                 <li><a href="#">
@@ -48,7 +49,7 @@
 
                     </td>
                     <td>
-                        {{ system }} 序号:
+                        {{ system }}-{{ env }} 序号:
 
                         <!-- Split button -->
                         <div class="btn-group">
@@ -77,13 +78,14 @@
                             </ul>
                         </div>
                     </td>
-                    <td>{{ system }}秒</td>
+                    <td>{{ "111" }}秒</td>
                     <td>
                         <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm">
                             新建war包
                         </button>
                     </td>
                 </tr>
+            {% endfor %}
         </table>
 
     </div>

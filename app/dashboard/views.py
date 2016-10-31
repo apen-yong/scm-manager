@@ -8,7 +8,6 @@ import xmlrpclib
 
 dashboard = Blueprint('dashboard', __name__)
 
-
 current_user = {
     "admin": {
         "username": "admin"
@@ -46,7 +45,8 @@ def taillog(system):
 
 @dashboard.route('/deploy/<system>')
 def deploy(system):
-    return render_template('deploy_show.html', current_user=current_user, system=system)
+    deploy_env = current_app.config['DEPLOY_ENV']
+    return render_template('deploy_show.html', current_user=current_user, system=system, deploy_env=deploy_env)
 
 
 @dashboard.route('/zipfile/<system>')
@@ -73,7 +73,8 @@ def uploaded_file(filename):
 
 @dashboard.route('/launch/job/<name>')
 def jenkins(name):
-    jenkins_rpc = xmlrpclib.ServerProxy(
-        "http://{}:{}".format(current_app.config['jenkins_rpc_server'], current_app.config["jenkins_rpc_port"]))
+    rpc_url = "http://{}:{}".format(current_app.config['RPC_SERVER'], current_app.config["RPC_PORT"])
+    print "start to connect to:{}".format(rpc_url)
+    jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
     result = jenkins_rpc.BuildJob(name)
     return result

@@ -1,7 +1,7 @@
 function get_confirm() {
     var name = $('#jobname').text();
     var btn = $('#submit').button('loading');
-    $.get("./war?name=" + name,
+    $.get("/launch/job/" + name,
         function (data, status) {
             if (data == "true") {
                 btn.button('reset');

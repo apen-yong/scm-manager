@@ -17,7 +17,7 @@ import re
 app = Flask(__name__)
 handler = XMLRPCHandler('api')
 handler.connect(app, '/api')
-j = jenkins.Jenkins("http://127.1:8000", 'root', '123.com')
+j = jenkins.Jenkins("http://127.1:8080", 'rpcuser', '2266bcc74441b07e9c50ba468a620199')
 
 
 @handler.register
