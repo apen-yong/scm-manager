@@ -176,7 +176,7 @@ def package_sync(system, ver):
 
             remote_rpc_url = "http://{}:{}/api".format(host, current_app.config["RPC_PORT"])
             remote_prc = xmlrpclib.ServerProxy(remote_rpc_url)
-            remote_prc.download_package(folder, package_name)
+            remote_prc.DownloadPackage(folder, package_name)
     except socket.error, e:
         print "connect rpc server error:{}".format(e)
         return False
