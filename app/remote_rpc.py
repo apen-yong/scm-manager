@@ -146,7 +146,8 @@ def DownloadPackage(path, filename):
     download_dir = "/opt/scm-manager/wars"
     download_command = "aria2c -s 2 -x 2 {} -d {}".format(file_url, download_dir)
     commands.getoutput("rm -f {}/*.war".format(download_dir))
-    commands.getoutput(download_command)
+    output = commands.getoutput(download_command)
+    return output
 
 
 app.run('0.0.0.0', port=8085, debug=True)
