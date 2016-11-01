@@ -18,6 +18,7 @@ app = Flask(__name__)
 handler = XMLRPCHandler('api')
 handler.connect(app, '/api')
 j = jenkins.Jenkins("http://127.1:8080", 'rpcuser', '2266bcc74441b07e9c50ba468a620199')
+manager_host = '10.1.2.49'
 
 
 @handler.register
@@ -141,7 +142,7 @@ def GetBuildInfo(name, number):
 
 @handler.register
 def DownloadPackage(path, filename):
-    file_url = "http://{}:{}/{}/{}".format("172.18.36.37", "5000", path, filename)
+    file_url = "http://{}:{}/{}/{}".format(manager_host, "80", path, filename)
     download_dir = "/opt/scm-manager/wars"
     download_command = "aria2c -s 2 -x 2 {} -d {}".format(file_url, download_dir)
     commands.getoutput("rm -f {}/*.war".format(download_dir))
