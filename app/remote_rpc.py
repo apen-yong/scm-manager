@@ -142,7 +142,7 @@ def GetBuildInfo(name, number):
 
 @handler.register
 def DownloadPackage(path, filename):
-    file_url = "http://{}:{}/{}/{}".format(manager_host, "80", path, filename)
+    file_url = "http://{}:{}/uploaded_file/{}?folder=SCM-{}".format(manager_host, "80", filename, path)
     download_dir = "/opt/scm-manager/wars"
     download_command = "aria2c -s 2 -x 2 {} -d {}".format(file_url, download_dir)
     commands.getoutput("rm -f {}/*.war".format(download_dir))
