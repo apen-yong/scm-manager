@@ -164,7 +164,7 @@ def do_cmd(address, cmd):
 def package_sync(system, ver):
     address = current_app.config[system.upper()]
     try:
-        for host in address.get("ver".upper()):
+        for host in address.get(ver.upper()):
             jenkins_rpc_url = "http://{}:{}/api".format(current_app.config['RPC_SERVER'], current_app.config["RPC_PORT"])
             jenkins_rpc = xmlrpclib.ServerProxy(jenkins_rpc_url)
             job_info = eval(jenkins_rpc.GetJobInfo("{}-{}".format(system, ver).lower()))
