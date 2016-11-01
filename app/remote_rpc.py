@@ -139,4 +139,11 @@ def GetBuildInfo(name, number):
     return data  # xml-rpc 不能使用长整数  WTF
 
 
+@handler.register
+def DownloadPackage(path, filename):
+    file_url = "http://{}:{}/{}/{}".format("172.18.36.37", "5000", path, filename)
+    download_command = "aria2c -s 2 -x 2 {}".format(file_url)
+    commands.getoutput(download_command)
+
+
 app.run('0.0.0.0', port=8085, debug=True)

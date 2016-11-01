@@ -1,7 +1,7 @@
 function get_confirm() {
-    var name = $('#jobname').text();
+    var name = $('#jobname').attr('value');
     var btn = $('#submit').button('loading');
-    $.get("/launch/job/" + name,
+    $.get("/api/deploy/" + name,
         function (data, status) {
             if (data == "true") {
                 btn.button('reset');
@@ -62,7 +62,9 @@ $('#console').on('show.bs.modal', function (event) {
 $(".btn-xs").click(
     function () {
         var bt = $(this).text();
-        $("#whichbutton").text(bt)
+        var server = $(this).attr("server")
+        $("#which_button").text(bt)
+        $("#which_server").text(server)
     }
 );
 
@@ -173,7 +175,8 @@ $("#p_list input").click(
 );
 
 function do_cmd() {
-    var info = $("#whichbutton").text();
+    var info = $("#which_button").text();
+    var host = $("#which_server").text();
     if (info == "启动") {
         var cmd = "start";
     }
@@ -183,7 +186,7 @@ function do_cmd() {
     else {
         var cmd = "stop"
     }
-    $.get("./do_cmd?cmd=" + cmd,
+    $.get("/cmd/" + host + "/" +cmd,
         function (data, status) {
             obj = JSON.parse(data);
             if (obj['code'] == 0) {
@@ -205,9 +208,15 @@ $(document).ready(function () {
 
 function startrequest() {
     $('#time').text('Time：' + (new Date()).toString());
-    $('#status_html_Genscript-SCM-QA').load('./get_status_html?c=Genscript-SCM-QA')
-    $('#status_html_Genscript-SCM-Prod').load('./get_status_html?c=Genscript-SCM-Prod')
-    $('#status_html_Genscript-SCM-Drsite').load('./get_status_html?c=Genscript-SCM-Drsite')
+    $("td[name='jobname']").each(
+        function (i, val) {
+            // console.log( i + ": " + $( this ).text() );
+            $('#status_html_' + $( this ).text() ).load('/api/query/'+ $( this ).text())
+        }
+    );
+    // $('#status_html_Genscript-SCM-QA').load('./get_status_html?c=Genscript-SCM-QA')
+    // $('#status_html_Genscript-SCM-Prod').load('./get_status_html?c=Genscript-SCM-Prod')
+    // $('#status_html_Genscript-SCM-Drsite').load('./get_status_html?c=Genscript-SCM-Drsite')
 }
 
 $("#close_res").click(

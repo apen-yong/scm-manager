@@ -34,48 +34,71 @@
         }
     </script>
 
-        <h3 id="node" value="testinfo" class="text-muted">{{ system }} 进程信息：</h3>
-        <hr/>
-        <div class="col-md-10">
-        <div class="col-md-5">
-            <h4 id="node" value="testinfo" class="text-muted">{{ system }} node01：</h4>
-            <form action="/gearman_cmd" method="get">
+    <h3 id="node" value="testinfo" class="text-muted">{{ system }} 进程信息：</h3>
+    <hr/>
+    <div class="col-md-10">
+        {% for k,v in status.items() %}
+            <div class="col-md-5">
+                <h4 id="node" value="testinfo" class="text-muted">{{ system }} {{ k }}：</h4>
                 <table class="table table-striped table-hove table-condensed" role="table" style="font-size:8pt">
                     <tr>
-                        <th>项目</th>
+                        <th width="30%">项目</th>
                         <th>状态</th>
                     </tr>
                     <tr>
                         <td>Java进程 PID</td>
-                        <td>12345</td>
+                        {% if v['pid'] %}
+                            <td><img src="/static/img/blue_anime.gif" tooltip="运行中"
+                                     style="width: 18px; height: 18px;"><img>{{ v['pid'] }} Is running
+                            </td>
+                        {% else %}
+                            <td><img src="/static/img/red.png" tooltip="没有运行"
+                                     style="width: 18px; height: 18px; "><img> Is not
+                                running
+                            </td>
+                        {% endif %}
                     </tr>
                     <tr>
-                        <td>Tomcat 运行时间</td>
-                        <td>12345</td>
+                        <td>Tomcat 启动时间</td>
+                        <td>{{ v.get('uptime', None) }}</td>
                     </tr>
                     <tr>
                         <td>内存分配</td>
-                        <td>RES:100 RSS:2233</td>
+                        <td>{{ v.get('mem', None) }}</td>
                     </tr>
                     <tr>
                         <td>服务器负载</td>
-                        <td>5 10 15</td>
+                        <td>{{ v.get("load", None) }}</td>
+                    </tr>
+                    <tr>
+                        <td>包时间戳1</td>
+                        <td>{{ v.get('qa_mtime') }} </td>
+                    </tr>
+                    <tr>
+                        <td>包时间戳2</td>
+                        <td>{{ v.get('newest_mtime') }}</td>
+                    </tr>
+                    <tr>
+                        <td>包同步状态</td>
+                        <td>同步中</td>
                     </tr>
                     <tr>
                         <td>执行命令</td>
                         <td>
-                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
-                                    onclick="stop_start('start')">START
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm" server="{{ k }}">关闭
                             </button>
-                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
-                                    onclick="stop_start('stop')">STOP
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm" server="{{ k }}" >更新
                             </button>
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm" server="{{ k }}" >启动
+                            </button>
+
                         </td>
                     </tr>
                 </table>
-        </div>
+            </div>
+        {% endfor %}
         <div align='center' class="col-md-10">
-            </form>
+
 
             <!-- 模态框（Modal） -->
             <div class="modal fade" id="myconfirm" tabindex="-1" role="dialog"
@@ -92,14 +115,14 @@
                             </h4>
                         </div>
                         <div class="modal-body">
-                            确认后将会对$m_server上运行的所有$w_info[0].get('group')进行<b id="cmd">none</b>操作！
+                            确认后将会对<b id="which_server"></b>进行<b id="which_button"></b>操作，请确认！
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default"
                                     data-dismiss="modal">关闭
                             </button>
                             <button type="button" class="btn btn-primary" id="submit" data-loading-text="Loading..."
-                                    autocomplete="off" onclick="get_confirm('b')">
+                                    autocomplete="off" onclick="do_cmd()">
                                 提交更改
                             </button>
                         </div>
