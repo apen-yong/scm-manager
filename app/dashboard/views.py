@@ -56,36 +56,39 @@ def taillog(system):
 
 @dashboard.route('/deploy/<system>')
 def deploy(system):
-    rpc_url = "http://{}:{}/api".format(current_app.config['RPC_SERVER'], current_app.config["RPC_PORT"])
-    jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
-    deploy_env = current_app.config['DEPLOY_ENV']
-    jobdata = {}
-    info = jenkins_rpc.GetInfo()
+    try:
+        rpc_url = "http://{}:{}/api".format(current_app.config['RPC_SERVER'], current_app.config["RPC_PORT"])
+        jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
+        deploy_env = current_app.config['DEPLOY_ENV']
+        jobdata = {}
+        info = jenkins_rpc.GetInfo()
 
-    for job in info['jobs']:
-        if not re.match(system, job['name']):
-            continue
-        color = job['color']
-        job_info = eval(jenkins_rpc.GetJobInfo(job['name']))
-        jobdata[job['name']] = job_info
-        try:
-            lastSuccessfulBuildNumber = job_info['lastSuccessfulBuild']['number']
-            job_info['lastSuccessfulBuildDetail'] = jenkins_rpc.GetBuildInfo(job['name'], lastSuccessfulBuildNumber)
-        except TypeError, e:
-            return "Please run job manually"
+        for job in info['jobs']:
+            if not re.match(system, job['name']):
+                continue
+            color = job['color']
+            job_info = eval(jenkins_rpc.GetJobInfo(job['name']))
+            jobdata[job['name']] = job_info
+            try:
+                lastSuccessfulBuildNumber = job_info['lastSuccessfulBuild']['number']
+                job_info['lastSuccessfulBuildDetail'] = jenkins_rpc.GetBuildInfo(job['name'], lastSuccessfulBuildNumber)
+            except TypeError, e:
+                return "Please run job manually"
 
-        try:
-            lastUnsuccessfulBuildNumber = job_info['lastUnsuccessfulBuild']['number']
-            job_info['lastUnsuccessfulBuildNumber'] = jenkins_rpc.GetBuildInfo(job['name'], lastUnsuccessfulBuildNumber)
-            job_info['lastUnsuccessfulBuildDetail'] = jenkins_rpc.GetBuildInfo(job['name'], lastUnsuccessfulBuildNumber)
-        except TypeError, e:
-            job_info['lastUnsuccessfulBuildDetail'] = 'null'
+            try:
+                lastUnsuccessfulBuildNumber = job_info['lastUnsuccessfulBuild']['number']
+                job_info['lastUnsuccessfulBuildNumber'] = jenkins_rpc.GetBuildInfo(job['name'], lastUnsuccessfulBuildNumber)
+                job_info['lastUnsuccessfulBuildDetail'] = jenkins_rpc.GetBuildInfo(job['name'], lastUnsuccessfulBuildNumber)
+            except TypeError, e:
+                job_info['lastUnsuccessfulBuildDetail'] = 'null'
 
-        try:
-            lastCompletedBuildNumber = job_info['lastCompletedBuild']['number']
-            job_info['lastCompletedBuildDetail'] = jenkins_rpc.GetBuildInfo(job['name'], lastCompletedBuildNumber)
-        except TypeError, e:
-            job_info['lastCompletedBuildNumber'] = None
+            try:
+                lastCompletedBuildNumber = job_info['lastCompletedBuild']['number']
+                job_info['lastCompletedBuildDetail'] = jenkins_rpc.GetBuildInfo(job['name'], lastCompletedBuildNumber)
+            except TypeError, e:
+                job_info['lastCompletedBuildNumber'] = None
+    except socket.error, e:
+        return "Can not connect to remote jenkins. {}".format(e)
     return render_template('deploy_show.html', current_user=current_user, system=system, deploy_env=deploy_env,
                            job_info=jobdata)
 
