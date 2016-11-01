@@ -179,5 +179,5 @@ def package_sync(system, ver):
             remote_prc.DownloadPackage(folder, package_name)
     except socket.error, e:
         print "connect rpc server error:{}".format(e)
-        return False
-    return True
+        return "Error: {}".format(e)
+    return "Success start download file."
