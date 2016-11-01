@@ -165,7 +165,8 @@ def package_sync(system, ver):
     address = current_app.config[system.upper()]
     try:
         for host in address.get(ver.upper()):
-            jenkins_rpc_url = "http://{}:{}/api".format(current_app.config['RPC_SERVER'], current_app.config["RPC_PORT"])
+            jenkins_rpc_url = "http://{}:{}/api".format(current_app.config['RPC_SERVER'],
+                                                        current_app.config["RPC_PORT"])
             jenkins_rpc = xmlrpclib.ServerProxy(jenkins_rpc_url)
             job_info = eval(jenkins_rpc.GetJobInfo("{}-{}".format(system, ver).lower()))
             lastSuccessfulBuildNumber = job_info['lastSuccessfulBuild']['number']
@@ -174,9 +175,9 @@ def package_sync(system, ver):
             folder = "{}-{}".format(system, ver)
 
             remote_rpc_url = "http://{}:{}/api".format(host, current_app.config["RPC_PORT"])
-            remote_rpc_url.download_package(folder,package_name)
+            remote_prc = xmlrpclib.ServerProxy(remote_rpc_url)
+            remote_prc.download_package(folder, package_name)
     except socket.error, e:
         print "connect rpc server error:{}".format(e)
         return False
     return True
-
