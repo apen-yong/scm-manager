@@ -112,9 +112,8 @@ def uploaded_file(filename):
         return send_from_directory(current_app.config['UPLOAD_FOLDER'],
                                    filename)
     else:
-        folder = request.args.get('folder')
-        return send_from_directory(folder + current_app.config['PACKAGE_FOLDER'],
-                                   filename)
+        path = os.path.join(current_app.config['PACKAGE_FOLDER'], request.args.get('folder'))
+        return send_from_directory(path, filename)
 
 
 @dashboard.route('/api/deploy/<name>')
