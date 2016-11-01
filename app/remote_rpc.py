@@ -118,7 +118,7 @@ def GetProcessInfo():
     status['qa_mtime'] = commands.getoutput(
         'stat  /home/scm/apache-tomcat-7.0.39/webapps/scm.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1')
     status['newest_mtime'] = commands.getoutput(
-        'stat  /root/.jenkins/jobs/Genscript-SCM-QA/workspace/target/scm-test/scm.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1')
+        'stat  /opt/scm-manager/wars/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1')
     if pidinfo[1] == "":
         return status
     else:
@@ -142,8 +142,9 @@ def GetBuildInfo(name, number):
 @handler.register
 def DownloadPackage(path, filename):
     file_url = "http://{}:{}/{}/{}".format("172.18.36.37", "5000", path, filename)
-    download_dir = "/opt/scm-manager/wars/"
-    download_command = "aria2c -s 2 -x 2 {}".format(file_url)
+    download_dir = "/opt/scm-manager/wars"
+    download_command = "aria2c -s 2 -x 2 {} -d {}".format(file_url, download_dir)
+    commands.getoutput("rm -f {}/*.war".format(download_dir))
     commands.getoutput(download_command)
 
 
