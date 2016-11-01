@@ -147,6 +147,9 @@ def query_status(name):
             elif j.get('color') == 'red':
                 return '<img src="/static/img/red.png" tooltip="Failed" ' \
                        'style="width: 18px; height: 18px;" ><img>失败'
+            elif j.get('color') == 'red_anime':
+                return '<img src="/static/img/red_anime.gif" tooltip="运行中" ' \
+                       'style="width: 18px; height: 18px;" ><img>正在打包'
         else:
             continue
     return 'false'
