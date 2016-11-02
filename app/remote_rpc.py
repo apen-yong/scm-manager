@@ -94,7 +94,7 @@ def DoCmd(c):
         con = False
         while not con:
             pidinfo = commands.getstatusoutput(
-                'netstat -nlp | grep {} | awk \'{print $7}\' | cut -d / -f 1'.format(tomcat_port))
+                'netstat -nlp | grep {} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))
             print "pid is:%s" % str(pidinfo[1])
             if not re.match("\d", pidinfo[1]):
                 print "sleep"
@@ -109,7 +109,7 @@ def DoCmd(c):
         time.sleep(2)
         status = commands.getstatusoutput(command)
     else:
-        pid = commands.getstatusoutput('netstat -nlp | grep {} | awk \'{print $7}\' | cut -d / -f 1'.format(tomcat_port))[1]
+        pid = commands.getstatusoutput('netstat -nlp | grep {} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))[1]
         if re.match("\d", pid):
             command = "kill -9 %s" % pid
             status = commands.getstatusoutput(command)
