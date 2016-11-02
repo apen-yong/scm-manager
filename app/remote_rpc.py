@@ -9,9 +9,9 @@ import jenkins
 import time
 import base64
 import commands
-from jinja2.nodes import Output
+# from jinja2.nodes import Output
 import os
-import MySQLdb
+# import MySQLdb
 import re
 
 app = Flask(__name__)
@@ -69,17 +69,17 @@ def BuildJob(n):
     return data
 
 
-@handler.register
-def CleanTheMess():
-    db = MySQLdb.connect("10.168.2.125", "svn", "svnpassword", "svntool")
-    cursor = db.cursor()
-    sql = "update scm_projectstatus set status=0,approve_status=0 where status > 0 and approve_status = 3"
-    sql2 = "delete from scm_proj_with_user where projectid=(select projectid from scm_projectstatus where status > 0 and approve_status = 3)"
-    cursor.execute(sql)
-    cursor.execute(sql2)
-    db.commit()
-    db.close()
-    return
+# @handler.register
+# def CleanTheMess():
+#     db = MySQLdb.connect("10.168.2.125", "svn", "svnpassword", "svntool")
+#     cursor = db.cursor()
+#     sql = "update scm_projectstatus set status=0,approve_status=0 where status > 0 and approve_status = 3"
+#     sql2 = "delete from scm_proj_with_user where projectid=(select projectid from scm_projectstatus where status > 0 and approve_status = 3)"
+#     cursor.execute(sql)
+#     cursor.execute(sql2)
+#     db.commit()
+#     db.close()
+#     return
 
 
 @handler.register
