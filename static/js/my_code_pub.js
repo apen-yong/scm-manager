@@ -203,7 +203,7 @@ function do_cmd() {
 
 
 $(document).ready(function () {
-    setInterval('startrequest()', 2000)
+    setInterval('startrequest()', 8000)
 });
 
 function startrequest() {

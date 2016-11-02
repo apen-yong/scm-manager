@@ -19,6 +19,9 @@ handler = XMLRPCHandler('api')
 handler.connect(app, '/api')
 j = jenkins.Jenkins("http://127.1:8080", 'rpcuser', '2266bcc74441b07e9c50ba468a620199')
 manager_host = '10.1.2.49'
+tomcat_root = "/home/scm/apache-tomcat-7.0.39"
+tomcat_port = "8080"
+package_root = "/opt/scm-manager/wars"
 
 
 @handler.register
@@ -86,11 +89,12 @@ def BuildJob(n):
 def DoCmd(c):
     print "cmd is  %s" % c
     if c == "start":
-        command = "su - scm -c /home/scm/apache-tomcat-7.0.39/bin/startup.sh"
+        command = "su - scm -c {}/bin/startup.sh".format(tomcat_root)
         status = [os.system(command), "nothing"]
         con = False
         while not con:
-            pidinfo = commands.getstatusoutput('netstat -nlp | grep 8080 | awk \'{print $7}\' | cut -d / -f 1')
+            pidinfo = commands.getstatusoutput(
+                'netstat -nlp | grep {} | awk \'{print $7}\' | cut -d / -f 1'.format(tomcat_port))
             print "pid is:%s" % str(pidinfo[1])
             if not re.match("\d", pidinfo[1]):
                 print "sleep"
@@ -98,11 +102,14 @@ def DoCmd(c):
             else:
                 con = True
     elif c == "update":
-        command = "rm -fr /home/scm/apache-tomcat-7.0.39/work/*; rm -fr /home/scm/apache-tomcat-7.0.39/webapps/*; cp -a /root/.jenkins/jobs/Genscript-SCM-QA/workspace/target/scm-test/scm.war /home/scm/apache-tomcat-7.0.39/webapps/scm.war"
+        command = "rm -fr {}/work/*; rm -fr {}/webapps/*; cp -a {}/*.war {}/webapps/scm.war".format(tomcat_root,
+                                                                                                    tomcat_root,
+                                                                                                    package_root,
+                                                                                                    tomcat_root)
         time.sleep(2)
         status = commands.getstatusoutput(command)
     else:
-        pid = commands.getstatusoutput('netstat -nlp | grep 8080 | awk \'{print $7}\' | cut -d / -f 1')[1]
+        pid = commands.getstatusoutput('netstat -nlp | grep {} | awk \'{print $7}\' | cut -d / -f 1'.format(tomcat_port))[1]
         if re.match("\d", pid):
             command = "kill -9 %s" % pid
             status = commands.getstatusoutput(command)
