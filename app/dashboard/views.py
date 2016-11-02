@@ -175,7 +175,7 @@ def package_sync(system, ver):
                                                         current_app.config["RPC_PORT"])
             jenkins_rpc = xmlrpclib.ServerProxy(jenkins_rpc_url)
             job_info = eval(jenkins_rpc.GetJobInfo("{}-{}".format(system, ver).lower()))
-            lastSuccessfulBuildNumber = job_info['lastSuccessfulBuild']['number']
+            lastSuccessfulBuildNumber = job_info['lastSuccessfulBuild']['number'] + 1
             date = time.strftime("%Y%m%d", time.localtime(time.time()))
             package_name = "SCM-{}-{}-{}.war".format(system, date, lastSuccessfulBuildNumber)
             folder = "{}-{}".format(system, ver)
