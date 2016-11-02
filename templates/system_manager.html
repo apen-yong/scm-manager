@@ -64,24 +64,24 @@
                     </tr>
                     <tr>
                         <td>内存分配</td>
-                        <td>{{ v.get('mem', None) }}</td>
+                        <td>{{ v.get('mem_info'/1000, None) }}</td>
                     </tr>
                     <tr>
                         <td>服务器负载</td>
-                        <td>{{ v.get("load", None) }}</td>
+                        <td>{{ v.get("load_info", None) }}</td>
                     </tr>
                     <tr>
-                        <td>包时间戳1</td>
+                        <td>运行中war包 时间戳</td>
                         <td>{{ v.get('qa_mtime') }} </td>
                     </tr>
                     <tr>
-                        <td>包时间戳2</td>
+                        <td>待更新war包 时间戳</td>
                         <td>{{ v.get('newest_mtime') }}</td>
                     </tr>
-                    <tr>
-                        <td>包同步状态</td>
-                        <td>同步中</td>
-                    </tr>
+{#                    <tr>#}
+{#                        <td>包同步状态</td>#}
+{#                        <td>同步中</td>#}
+{#                    </tr>#}
                     <tr>
                         <td>执行命令</td>
                         <td>

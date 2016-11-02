@@ -120,11 +120,13 @@ def GetProcessInfo():
         'stat  /home/scm/apache-tomcat-7.0.39/webapps/scm.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1')
     status['newest_mtime'] = commands.getoutput(
         'stat  /opt/scm-manager/wars/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1')
+    status['load_info'] = commands.getoutput('w |grep \'load\'')
     if pidinfo[1] == "":
         return status
     else:
         status['pid'] = pidinfo[1]
         status['uptime'] = commands.getoutput('ps -p %s -o lstart | sed -n \'2p\'' % pidinfo[1])
+        status['mem_info'] = commands.getoutput("cat /proc/{}/status  | grep RSS".format(pidinfo[1]))
         return status
 
 
