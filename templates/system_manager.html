@@ -76,7 +76,11 @@
                     </tr>
                     <tr>
                         <td>待更新war包 时间戳</td>
-                        <td>{{ v.get('newest_mtime') }}@{{ v.get('newest_filename', None) }}</td>
+                        <td>{{ v.get('newest_mtime') }}</td>
+                    </tr>
+                          <tr>
+                        <td>待更新war包 文件名</td>
+                        <td>{{ v.get('newest_filename', None) }}</td>
                     </tr>
 {#                    <tr>#}
 {#                        <td>包同步状态</td>#}
