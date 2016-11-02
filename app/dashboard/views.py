@@ -163,7 +163,9 @@ def do_cmd(address, cmd):
     rpc_url = "http://{}:{}/api".format(address, current_app.config["RPC_PORT"])
     jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
     data = jenkins_rpc.DoCmd(cmd)
-    return "data"
+    json_obj = '{"code":%s, "info":"%s"}' % (data[0], data[1])
+    print json_obj
+    return str(json_obj)
 
 
 @dashboard.route('/sync/<system>/<ver>')
