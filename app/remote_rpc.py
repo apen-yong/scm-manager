@@ -120,7 +120,7 @@ def GetProcessInfo():
         'stat  /home/scm/apache-tomcat-7.0.39/webapps/scm.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1')
     status['newest_mtime'] = commands.getoutput(
         'stat  /opt/scm-manager/wars/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1')
-    status['load_info'] = commands.getoutput('w |grep \'load\'')
+    status['load_info'] = commands.getoutput(' w |grep \'load\' | cut -d , -f 4,5,6')
     if pidinfo[1] == "":
         return status
     else:
