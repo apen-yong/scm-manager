@@ -133,7 +133,7 @@ def GetProcessInfo(system, ver):
         'stat  {}/webapps/scm.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(tomcat_root))
     status['newest_filename'] = commands.getoutput('ls /opt/scm-manager/wars/{}-{}/'.format(system, ver)).lstrip()
     status['newest_mtime'] = commands.getoutput(
-        'stat  /opt/scm-manager/wars/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1')
+        'stat  /opt/scm-manager/wars/{}-{}/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(system, ver))
     status['load_info'] = commands.getoutput(' w |grep \'load\' | cut -d , -f 4,5,6')
     if pidinfo[1] == "":
         return status
