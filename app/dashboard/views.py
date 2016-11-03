@@ -42,7 +42,7 @@ def server_status(system, ver):
         rpc_url = "http://{}:{}/api".format(h, current_app.config["RPC_PORT"])
         try:
             jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
-            status[h] = jenkins_rpc.GetProcessInfo(system)
+            status[h] = jenkins_rpc.GetProcessInfo(system, ver)
         except socket.error, e:
             print "Connect error: {}".format(e)
             status[h] = {}
