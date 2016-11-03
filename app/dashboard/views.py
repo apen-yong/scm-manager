@@ -42,7 +42,7 @@ def server_status(system, ver):
         rpc_url = "http://{}:{}/api".format(h, current_app.config["RPC_PORT"])
         try:
             jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
-            status[h] = jenkins_rpc.GetProcessInfo()
+            status[h] = jenkins_rpc.GetProcessInfo(system)
         except socket.error, e:
             print "Connect error: {}".format(e)
             status[h] = {}
@@ -162,7 +162,11 @@ def query_status(name):
 def do_cmd(address, cmd):
     rpc_url = "http://{}:{}/api".format(address, current_app.config["RPC_PORT"])
     jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
-    data = jenkins_rpc.DoCmd(cmd)
+    if address in current_app["USSHIPPING"]["TEST"] or address in current_app["USSHIPPING"]["PROD"]:
+        system = "usshipping"
+    else:
+        system = "other"
+    data = jenkins_rpc.DoCmd(cmd, system)
     json_obj = '{"code":%s, "info":"%s"}' % (data[0], data[1])
     print json_obj
     return str(json_obj)
