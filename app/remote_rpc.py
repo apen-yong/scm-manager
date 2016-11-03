@@ -137,7 +137,7 @@ def GetProcessInfo(system, ver):
     package_name = "scm.war"
     if system == 'cnshipping':
         tomcat_root = "/home/cscm/apache-tomcat-7.0.39"
-    elif system == "mes" or system == "meterial":
+    elif system == "manufacturing" or system == "meterial":
         tomcat_root = "/home/mes/apache-tomcat-8.0.24"
         package_name = "{}.war".format(system)
     else:
