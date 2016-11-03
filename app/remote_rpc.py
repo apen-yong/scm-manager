@@ -122,7 +122,7 @@ def DoCmd(c):
 @handler.register
 def GetProcessInfo():
     status = {}
-    pidinfo = commands.getstatusoutput('netstat -nlp | grep 8080 | awk \'{print $7}\' | cut -d / -f 1')
+    pidinfo = commands.getstatusoutput('netstat -nlp | grep :8080 | awk \'{print $7}\' | cut -d / -f 1')
     status['qa_mtime'] = commands.getoutput(
         'stat  /home/scm/apache-tomcat-7.0.39/webapps/scm.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1')
     status['newest_filename'] = commands.getoutput('ls /opt/scm-manager/wars/').lstrip()
@@ -153,7 +153,7 @@ def GetBuildInfo(name, number):
 @handler.register
 def DownloadPackage(path, filename):
     file_url = "http://{}:{}/uploaded_file/{}?folder=SCM-{}".format(manager_host, "80", filename, path)
-    download_dir = "/opt/scm-manager/wars"
+    download_dir = "/opt/scm-manager/wars{}".format(path)
     download_command = "aria2c -s 2 -x 2 {} -d {} -D".format(file_url, download_dir)
     commands.getoutput("rm -f {}/*.war".format(download_dir))
     output = commands.getoutput(download_command)

@@ -29,7 +29,7 @@ CNSHIPPING = {
     "PROD": ["10.168.2.163",],
 }
 
-SHIPPING = {
+USSHIPPING = {
     "TEST": ["10.168.3.85"],
     "PROD": ["10.168.2.163",],
 }
