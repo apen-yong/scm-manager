@@ -46,6 +46,9 @@ def server_status(system, ver):
         except socket.error, e:
             print "Connect error: {}".format(e)
             status[h] = {}
+        except xmlrpclib.Fault, e:
+            print "rpc error: {}".format(e)
+            status[h] = {}
     return render_template('system_manager.html', current_user=current_user, system=system, status=status)
 
 
