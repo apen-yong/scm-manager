@@ -134,11 +134,18 @@ def DoCmd(operate, system):
 def GetProcessInfo(system, ver):
     status = {}
     tomcat_port = "28080" if system == 'cnshipping' else "8080"
-    tomcat_root = "/home/cscm/apache-tomcat-7.0.39" if system == 'cnshipping' else "/home/scm/apache-tomcat-7.0.39"
+    package_name = "scm.war"
+    if system == 'cnshipping':
+        tomcat_root = "/home/cscm/apache-tomcat-7.0.39"
+    elif system == "mes" or system == "meterial":
+        tomcat_root = "/home/mes/apache-tomcat-8.0.24"
+        package_name = "{}.war".format(system)
+    else:
+        tomcat_root = "/home/scm/apache-tomcat-7.0.39"
     pidinfo = commands.getstatusoutput(
         'netstat -nlp | grep :{} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))
     status['qa_mtime'] = commands.getoutput(
-        'stat  {}/webapps/scm.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(tomcat_root))
+        'stat  {}/webapps/{} | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(tomcat_root, package_name))
     status['newest_filename'] = commands.getoutput('ls /opt/scm-manager/wars/{}-{}/'.format(system, ver)).lstrip()
     status['newest_mtime'] = commands.getoutput(
         'stat  /opt/scm-manager/wars/{}-{}/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(system,
