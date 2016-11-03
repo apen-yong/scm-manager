@@ -164,6 +164,10 @@ def do_cmd(address, cmd):
     jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
     if address in current_app["USSHIPPING"]["TEST"] or address in current_app["USSHIPPING"]["PROD"]:
         system = "usshipping"
+    elif address in current_app["MES"]["TEST"] or address in current_app["MES"]["PROD"]:
+        system = "mes.manufacturing"
+    elif address in current_app["METERIAL"]["TEST"] or address in current_app["METERIAL"]["PROD"]:
+        system = "material"
     else:
         system = "other"
     data = jenkins_rpc.DoCmd(cmd, system)

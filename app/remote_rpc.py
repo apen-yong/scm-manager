@@ -88,7 +88,14 @@ def BuildJob(n):
 def DoCmd(operate, system):
     print "cmd is  %s" % operate
     tomcat_port = "28080" if system == 'cnshipping' else "8080"
-    tomcat_root = "/home/cscm/apache-tomcat-7.0.39" if system == 'cnshipping' else "/home/scm/apache-tomcat-7.0.39"
+    package_name = "scm.war"
+    if system == 'cnshipping':
+        tomcat_root = "/home/cscm/apache-tomcat-7.0.39"
+    elif system == "mes.manufacturing" or system == "material":
+        tomcat_root = "/home/mes/apache-tomcat-8.0.24"
+        package_name = "{}.war".format(system)
+    else:
+        tomcat_root = "/home/scm/apache-tomcat-7.0.39"
     if operate == "start":
         command = "su - scm -c {}/bin/startup.sh".format(tomcat_root)
         status = [os.system(command), "nothing"]
@@ -103,10 +110,11 @@ def DoCmd(operate, system):
             else:
                 con = True
     elif operate == "update":
-        command = "rm -fr {}/work/*; rm -fr {}/webapps/*; cp -a {}/*.war {}/webapps/scm.war".format(tomcat_root,
-                                                                                                    tomcat_root,
-                                                                                                    package_root,
-                                                                                                    tomcat_root)
+        command = "rm -fr {}/work/*; rm -fr {}/webapps/*; cp -a {}/*.war {}/webapps/{}".format(tomcat_root,
+                                                                                               tomcat_root,
+                                                                                               package_root,
+                                                                                               tomcat_root,
+                                                                                               package_name)
         time.sleep(2)
         status = commands.getstatusoutput(command)
     else:
@@ -133,7 +141,8 @@ def GetProcessInfo(system, ver):
         'stat  {}/webapps/scm.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(tomcat_root))
     status['newest_filename'] = commands.getoutput('ls /opt/scm-manager/wars/{}-{}/'.format(system, ver)).lstrip()
     status['newest_mtime'] = commands.getoutput(
-        'stat  /opt/scm-manager/wars/{}-{}/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(system, ver))
+        'stat  /opt/scm-manager/wars/{}-{}/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(system,
+                                                                                                                ver))
     status['load_info'] = commands.getoutput(' w |grep \'load\' | cut -d , -f 4,5,6')
     if pidinfo[1] == "":
         return status
