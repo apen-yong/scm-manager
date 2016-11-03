@@ -161,6 +161,7 @@ def DownloadPackage(path, filename):
     file_url = "http://{}:{}/uploaded_file/{}?folder=SCM-{}".format(manager_host, "80", filename, path)
     download_dir = "/opt/scm-manager/wars{}".format(path)
     download_command = "aria2c -s 2 -x 2 {} -d {} -D".format(file_url, download_dir)
+    print "Start to download file {}".format(download_command)
     commands.getoutput("rm -f {}/*.war".format(download_dir))
     output = commands.getoutput(download_command)
     print output
