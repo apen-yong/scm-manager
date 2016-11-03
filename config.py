@@ -34,7 +34,7 @@ USSHIPPING = {
     "PROD": ["10.168.2.163",],
 }
 
-METERIAL = {
+MATERIAL = {
     "TEST": ["10.168.3.84"],
     "PROD": ["10.168.2.166",],
 }
