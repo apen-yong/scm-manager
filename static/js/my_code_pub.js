@@ -204,6 +204,7 @@ function do_cmd() {
 
 $(document).ready(function () {
     setInterval('startrequest()', 3000)
+    menuselect()
 });
 
 function startrequest() {
@@ -224,3 +225,22 @@ $("#close_res").click(
         location.reload()
     }
 );
+
+function menuselect() {
+    var my_location = location.href;
+    // alert(my_location)
+    $("#menu a").each(function () {
+        // alert($(this).attr('href').split("/")[2])
+        if ((my_location + "/").indexOf($(this).attr('href').split("/")[2]) > -1 && $(this).attr('href') != '') {
+            // alert($(this).attr('href'))
+            $(this).parent().addClass('active')
+        }
+    })
+    $("#site_menu a").each(function () {
+        if ((my_location + "/").indexOf($(this).attr('href').split("/")[3])  > -1 && $(this).attr('href') != '') {
+            $(this).parent().addClass('active')
+        }
+    })
+
+    
+}
