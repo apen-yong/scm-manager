@@ -14,21 +14,21 @@
     <div id="navigator">
         {% block navigator %}
             <div class="page-header">
-                <h3>Genscript svn tool
-                    <small>v2.0 <p class="text-right" style="font-size:9pt">你好，{{ current_user.username }} <a
+                <h3>Genscript 供应链代码发布系统
+                    <small>v1.0.1 <p class="text-right" style="font-size:9pt">你好，{{ current_user.username }} <a
                             href="#">登出</a></p></small>
                 </h3>
             </div>
 
-            <ul class="nav nav-tabs" role="tablist">
-                <li class="active"><a href="/">首页</a></li>
+            <ul class="nav nav-tabs" role="tablist" id="menu">
+                <li class=""><a href="{{ url_for("dashboard.index") }}">首页</a></li>
                 <li ><a href="{{ url_for("dashboard.show", system= "usorder") }}">US Order</a></li>
-                <li class=><a href="{{ url_for("dashboard.show", system= "cnorder") }}">CN Order</a></li>
-                <li class=><a href="{{ url_for("dashboard.show", system= "jporder") }}">JP Order</a></li>
-                <li class=><a href="{{ url_for("dashboard.show", system= "usshipping") }}">US/JP Shipping</a></li>
-                <li class=><a href="{{ url_for("dashboard.show", system="cnshipping") }}">CN Shipping</a></li>
-                <li class=><a href="{{ url_for("dashboard.show", system="manufacturing") }}">Manufacturing</a></li>
-                <li class=><a href="{{ url_for("dashboard.show", system="material") }}">Material</a></li>
+                <li class=""><a href="{{ url_for("dashboard.show", system= "cnorder") }}">CN Order</a></li>
+                <li class=""><a href="{{ url_for("dashboard.show", system= "jporder") }}">JP Order</a></li>
+                <li class=""><a href="{{ url_for("dashboard.show", system= "usshipping") }}">US/JP Shipping</a></li>
+                <li class=""><a href="{{ url_for("dashboard.show", system="cnshipping") }}">CN Shipping</a></li>
+                <li class=""><a href="{{ url_for("dashboard.show", system="manufacturing") }}">Manufacturing</a></li>
+                <li class=""><a href="{{ url_for("dashboard.show", system="material") }}">Material</a></li>
             </ul>
             </div>
         {% endblock %}
@@ -43,7 +43,7 @@
         <div id="footer">
             {% block footer %}
                 <div class="col-md-12">
-                    <h6 class="text-center">Created On 20150401
+                    <h6 class="text-center">Created On 20161101
                         <small> @author: follow <a id=time></a></small>
                     </h6>
                 </div>

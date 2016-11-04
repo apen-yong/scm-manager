@@ -3,16 +3,17 @@
 {% block sitemenu %}
     <div class="col-md-2">
         <h4>功能选择</h4>
-        <ul class="nav nav-pills nav-stacked" role="tablist">
+        <ul class="nav nav-pills nav-stacked" role="tablist" id="site_menu">
             <li><a href="{{ url_for('dashboard.server_status', system=system, ver="test") }}">测试环境管理<span
                     class="glyphicon glyphicon-eye-open pull-right"></span></a></li>
             <li><a href="{{ url_for('dashboard.server_status', system=system, ver="prod") }}">正式环境管理<span
                     class="glyphicon glyphicon-wrench pull-right"></span></a></li>
-            <li class="disabled"><a href="{{ url_for('dashboard.taillog', system=system) }}">日志查看<span
+            {#            <li class="disabled"><a href="{{ url_for('dashboard.taillog', system=system, taillog="taillog") }}">日志查看<span#}
+            <li class="disabled"><a href="#">日志查看<span
                     class="glyphicon glyphicon-hand-up pull-right"></span></a></li>
-            <li><a href="{{ url_for('dashboard.deploy', system=system) }}">Jenkins代码打包<span
+            <li><a href="{{ url_for('dashboard.deploy', system=system, wars="wars") }}">Jenkins代码打包<span
                     class="glyphicon glyphicon-compressed pull-right"></span></a></li>
-            <li><a href="{{ url_for('dashboard.zipfile', system=system) }}">单个文件更新<span
+            <li><a href="{{ url_for('dashboard.zipfile', system=system, zipfile="zipfile") }}">单个文件更新<span
                     class="glyphicon glyphicon-refresh pull-right"></span></a></li>
         </ul>
     </div>

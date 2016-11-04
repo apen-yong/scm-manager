@@ -52,13 +52,13 @@ def server_status(system, ver):
     return render_template('system_manager.html', current_user=current_user, system=system, status=status)
 
 
-@dashboard.route('/taillog/<system>')
-def taillog(system):
-    return request.path
+@dashboard.route('/logger/<system>/<taillog>')
+def taillog(system, taillog):
+    return "hello"
 
 
-@dashboard.route('/deploy/<system>')
-def deploy(system):
+@dashboard.route('/deploy/<system>/<wars>')
+def deploy(system, wars):
     try:
         rpc_url = "http://{}:{}/api".format(current_app.config['RPC_SERVER'], current_app.config["RPC_PORT"])
         jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
@@ -96,8 +96,8 @@ def deploy(system):
                            job_info=jobdata)
 
 
-@dashboard.route('/zipfile/<system>')
-def zipfile(system):
+@dashboard.route('/zipfile/<system>/<zipfile>')
+def zipfile(system, zipfile):
     return render_template('file_upload.html', current_user=current_user, system=system)
 
 
