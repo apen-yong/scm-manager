@@ -9,9 +9,7 @@ import jenkins
 import time
 import base64
 import commands
-# from jinja2.nodes import Output
 import os
-# import MySQLdb
 import re
 
 app = Flask(__name__)
@@ -73,17 +71,19 @@ def BuildJob(n):
 
 
 @handler.register
-def DoCmd(operate, system):
+def DoCmd(operate, node_info):
     print "cmd is  %s" % operate
-    tomcat_port = "28080" if system == 'cnshipping' else "8080"
-    package_name = "scm.war"
-    if system == 'cnshipping':
-        tomcat_root = tomcat_root_7
-    elif system == "mes.manufacturing" or system == "material":
+    (system, ver) = re.split("-", node_info)
+    tomcat_port = "28080" if re.match('cnshipping', system) else "8080"
+    if re.match('manufacturing', system):
+        tomcat_root = tomcat_root_8
+        package_name = "mes.{}.war".format(system)
+    elif re.match('material', system):
         tomcat_root = tomcat_root_8
         package_name = "{}.war".format(system)
     else:
         tomcat_root = tomcat_root_7
+        package_name = "scm.war"
     if operate == "start":
         command = "su - scm -c {}/bin/startup.sh".format(tomcat_root)
         status = [os.system(command), "nothing"]
@@ -98,11 +98,12 @@ def DoCmd(operate, system):
             else:
                 con = True
     elif operate == "update":
-        command = "rm -fr {}/work/*; rm -fr {}/webapps/*; cp -a {}/*.war {}/webapps/{}".format(tomcat_root,
-                                                                                               tomcat_root,
-                                                                                               package_root,
-                                                                                               tomcat_root,
-                                                                                               package_name)
+        command = "rm -fr {}/work/*; rm -fr {}/webapps/*; cp -a {}/SCM-{}/*.war {}/webapps/{}".format(tomcat_root,
+                                                                                                      tomcat_root,
+                                                                                                      package_root,
+                                                                                                      node_info,
+                                                                                                      tomcat_root,
+                                                                                                      package_name)
         time.sleep(2)
         status = commands.getstatusoutput(command)
     else:

@@ -164,15 +164,7 @@ def query_status(name):
 def do_cmd(address, cmd, node_info):
     rpc_url = "http://{}:{}/api".format(address, current_app.config["RPC_PORT"])
     jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
-    if address in current_app.config["USSHIPPING"]["TEST"] or address in current_app.config["USSHIPPING"]["PROD"]:
-        system = "usshipping"
-    elif address in current_app.config["MANUFACTURING"]["TEST"] or address in current_app.config["MANUFACTURING"]["PROD"]:
-        system = "mes.manufacturing"
-    elif address in current_app.config["MATERIAL"]["TEST"] or address in current_app.config["MATERIAL"]["PROD"]:
-        system = "material"
-    else:
-        system = node_info
-    data = jenkins_rpc.DoCmd(cmd, system)
+    data = jenkins_rpc.DoCmd(cmd, node_info)
     json_obj = '{"code":%s, "info":"%s"}' % (data[0], data[1])
     print json_obj
     return str(json_obj)
