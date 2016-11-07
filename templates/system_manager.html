@@ -34,7 +34,7 @@
         }
     </script>
 
-    <h3 id="node" value="testinfo" class="text-muted">{{ system }} 进程信息：</h3>
+    <h3 id="node_info" value={{ system }}-{{ v['ver'] }} class="text-muted">{{ system }}-{{ v['ver'] }} 进程信息：</h3>
     <hr/>
     <div class="col-md-10">
         {% for k,v in status.items() %}

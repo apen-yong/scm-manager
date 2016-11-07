@@ -177,6 +177,8 @@ $("#p_list input").click(
 function do_cmd() {
     var info = $("#which_button").text();
     var host = $("#which_server").text();
+    var node_info = $("#node_info").attr('value')
+    alert(node_info)
     if (info == "启动") {
         var cmd = "start";
     }

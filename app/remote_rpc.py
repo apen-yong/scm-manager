@@ -19,8 +19,9 @@ handler = XMLRPCHandler('api')
 handler.connect(app, '/api')
 j = jenkins.Jenkins("http://127.1:8080", 'rpcuser', '2266bcc74441b07e9c50ba468a620199')
 manager_host = '10.1.2.49'
-
 package_root = "/opt/scm-manager/wars"
+tomcat_root_7 = "/home/cscm/apache-tomcat-7.0.39"
+tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
 
 
 @handler.register
@@ -71,31 +72,18 @@ def BuildJob(n):
     return data
 
 
-# @handler.register
-# def CleanTheMess():
-#     db = MySQLdb.connect("10.168.2.125", "svn", "svnpassword", "svntool")
-#     cursor = db.cursor()
-#     sql = "update scm_projectstatus set status=0,approve_status=0 where status > 0 and approve_status = 3"
-#     sql2 = "delete from scm_proj_with_user where projectid=(select projectid from scm_projectstatus where status > 0 and approve_status = 3)"
-#     cursor.execute(sql)
-#     cursor.execute(sql2)
-#     db.commit()
-#     db.close()
-#     return
-
-
 @handler.register
 def DoCmd(operate, system):
     print "cmd is  %s" % operate
     tomcat_port = "28080" if system == 'cnshipping' else "8080"
     package_name = "scm.war"
     if system == 'cnshipping':
-        tomcat_root = "/home/cscm/apache-tomcat-7.0.39"
+        tomcat_root = tomcat_root_7
     elif system == "mes.manufacturing" or system == "material":
-        tomcat_root = "/home/mes/apache-tomcat-8.0.24"
+        tomcat_root = tomcat_root_8
         package_name = "{}.war".format(system)
     else:
-        tomcat_root = "/home/scm/apache-tomcat-7.0.39"
+        tomcat_root = tomcat_root_7
     if operate == "start":
         command = "su - scm -c {}/bin/startup.sh".format(tomcat_root)
         status = [os.system(command), "nothing"]
@@ -136,12 +124,12 @@ def GetProcessInfo(system, ver):
     tomcat_port = "28080" if system == 'cnshipping' else "8080"
     package_name = "scm.war"
     if system == 'cnshipping':
-        tomcat_root = "/home/cscm/apache-tomcat-7.0.39"
+        tomcat_root = tomcat_root_7
     elif system == "manufacturing" or system == "meterial":
-        tomcat_root = "/home/mes/apache-tomcat-8.0.24"
+        tomcat_root = tomcat_root_8
         package_name = "{}.war".format(system)
     else:
-        tomcat_root = "/home/scm/apache-tomcat-7.0.39"
+        tomcat_root = tomcat_root_7
     pidinfo = commands.getstatusoutput(
         'netstat -nlp | grep :{} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))
     status['qa_mtime'] = commands.getoutput(
