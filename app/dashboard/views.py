@@ -168,7 +168,7 @@ def do_cmd(address, cmd):
         system = "usshipping"
     elif address in current_app.config["MANUFACTURING"]["TEST"] or address in current_app.config["MANUFACTURING"]["PROD"]:
         system = "mes.manufacturing"
-    elif address in current_app.config["METERIAL"]["TEST"] or address in current_app.config["METERIAL"]["PROD"]:
+    elif address in current_app.config["MATERIAL"]["TEST"] or address in current_app.config["MATERIAL"]["PROD"]:
         system = "material"
     else:
         system = "other"
