@@ -43,14 +43,13 @@ def server_status(system, ver):
         try:
             jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
             status[h] = jenkins_rpc.GetProcessInfo(system, ver)
-            status['ver'] = ver
         except socket.error, e:
             print "Connect error: {}".format(e)
             status[h] = {}
         except xmlrpclib.Fault, e:
             print "rpc error: {}".format(e)
             status[h] = {}
-    return render_template('system_manager.html', current_user=current_user, system=system, status=status)
+    return render_template('system_manager.html', current_user=current_user, system=system, status=status, ver=ver)
 
 
 @dashboard.route('/logger/<system>/<taillog>')
@@ -161,8 +160,8 @@ def query_status(name):
     return 'false'
 
 
-@dashboard.route('/cmd/<address>/<cmd>')
-def do_cmd(address, cmd):
+@dashboard.route('/cmd/<address>/<cmd>/<node_info>')
+def do_cmd(address, cmd, node_info):
     rpc_url = "http://{}:{}/api".format(address, current_app.config["RPC_PORT"])
     jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
     if address in current_app.config["USSHIPPING"]["TEST"] or address in current_app.config["USSHIPPING"]["PROD"]:
@@ -172,7 +171,7 @@ def do_cmd(address, cmd):
     elif address in current_app.config["MATERIAL"]["TEST"] or address in current_app.config["MATERIAL"]["PROD"]:
         system = "material"
     else:
-        system = "other"
+        system = node_info
     data = jenkins_rpc.DoCmd(cmd, system)
     json_obj = '{"code":%s, "info":"%s"}' % (data[0], data[1])
     print json_obj

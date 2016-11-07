@@ -188,7 +188,7 @@ function do_cmd() {
     else {
         var cmd = "stop"
     }
-    $.get("/cmd/" + host + "/" +cmd,
+    $.get("/cmd/" + host + "/" +cmd + "/" + node_info,
         function (data, status) {
             obj = JSON.parse(data);
             if (obj['code'] == 0) {
