@@ -141,9 +141,8 @@ def query_status(name):
     jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
     info = jenkins_rpc.GetInfo()
     for j in info['jobs']:
-        print j
         if j.get('name') == name:
-            print "Get to_c info to render.{0}".format(str(j))
+            # print "Get to_c info to render.{0}".format(str(j))
             if j.get('color') == 'blue':
                 return '<img src="/static/img/blue.png" tooltip="运行中" ' \
                        'style="width: 18px; height: 18px; " ><img>打包完成'
@@ -165,11 +164,11 @@ def query_status(name):
 def do_cmd(address, cmd):
     rpc_url = "http://{}:{}/api".format(address, current_app.config["RPC_PORT"])
     jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
-    if address in current_app["USSHIPPING"]["TEST"] or address in current_app["USSHIPPING"]["PROD"]:
+    if address in current_app.config["USSHIPPING"]["TEST"] or address in current_app.config["USSHIPPING"]["PROD"]:
         system = "usshipping"
-    elif address in current_app["MANUFACTURING"]["TEST"] or address in current_app["MANUFACTURING"]["PROD"]:
+    elif address in current_app.config["MANUFACTURING"]["TEST"] or address in current_app.config["MANUFACTURING"]["PROD"]:
         system = "mes.manufacturing"
-    elif address in current_app["METERIAL"]["TEST"] or address in current_app["METERIAL"]["PROD"]:
+    elif address in current_app.config["METERIAL"]["TEST"] or address in current_app.config["METERIAL"]["PROD"]:
         system = "material"
     else:
         system = "other"
