@@ -127,14 +127,18 @@ def DoCmd(operate, node_info):
 def GetProcessInfo(system, ver):
     status = {}
     tomcat_port = "28080" if system == 'cnshipping' else "8080"
-    package_name = "scm.war"
-    if system == 'cnshipping':
-        tomcat_root = tomcat_root_7
-    elif system == "manufacturing" or system == "meterial":
+    if re.match('manufacturing', system):
+        tomcat_root = tomcat_root_8
+        package_name = "mes.{}.war".format(system)
+    elif re.match('material', system):
         tomcat_root = tomcat_root_8
         package_name = "{}.war".format(system)
+    elif re.match('cnshipping', system):
+        tomcat_root = tomcat_root_cscm
+        package_name = "scm.war"
     else:
         tomcat_root = tomcat_root_7
+        package_name = "scm.war"
     pidinfo = commands.getstatusoutput(
         'netstat -nlp | grep :{} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))
     status['qa_mtime'] = commands.getoutput(
