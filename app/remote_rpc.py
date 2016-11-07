@@ -18,8 +18,9 @@ handler.connect(app, '/api')
 j = jenkins.Jenkins("http://127.1:8080", 'rpcuser', '2266bcc74441b07e9c50ba468a620199')
 manager_host = '10.1.2.49'
 package_root = "/opt/scm-manager/wars"
-tomcat_root_7 = "/home/cscm/apache-tomcat-7.0.39"
+tomcat_root_7 = "/home/scm/apache-tomcat-7.0.39"
 tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
+tomcat_root_cscm = "/home/cscm/apache-tomcat-7.0.39"
 
 
 @handler.register
@@ -81,6 +82,9 @@ def DoCmd(operate, node_info):
     elif re.match('material', system):
         tomcat_root = tomcat_root_8
         package_name = "{}.war".format(system)
+    elif re.match('cnshipping', system):
+        tomcat_root = tomcat_root_cscm
+        package_name = "scm.war"
     else:
         tomcat_root = tomcat_root_7
         package_name = "scm.war"
@@ -98,7 +102,7 @@ def DoCmd(operate, node_info):
             else:
                 con = True
     elif operate == "update":
-        command = "rm -fr {}/work/*; rm -fr {}/webapps/*; cp -a {}/SCM-{}/*.war {}/webapps/{}".format(tomcat_root,
+        command = "rm -fr {}/work/*; rm -fr {}/webapps/*; cp -a {}/{}/*.war {}/webapps/{}".format(tomcat_root,
                                                                                                       tomcat_root,
                                                                                                       package_root,
                                                                                                       node_info,
