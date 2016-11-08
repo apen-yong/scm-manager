@@ -119,7 +119,7 @@ def upload(system):
         remote_rpc.DownloadPackage("zipfiles", file_uploaded.filename)
         remote_rpc.UpdateZipFile(file_uploaded.filename, system)
     return render_template('file_status.html', current_user=current_user, filename=file_uploaded.filename,
-                           hosts=current_app.config[system.upper()])
+                           hosts=current_app.config[system.upper()][ver.upper()])
 
 
 @dashboard.route('/uploaded_file/<filename>')
