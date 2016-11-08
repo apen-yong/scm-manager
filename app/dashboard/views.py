@@ -110,7 +110,7 @@ def upload(system):
     if request.method == 'POST':
         file_uploaded = request.files['zipfile']
         if file_uploaded and allowed_file(file_uploaded.filename):
-            file_uploaded.save(os.path.join(current_app.config['UPLOAD_FOLDER'], "zipfiles", file_uploaded.filename))
+            file_uploaded.save(os.path.join(current_app.config['UPLOAD_FOLDER'], "SCM-zipfiles", file_uploaded.filename))
         else:
             return "Error"
     for h in current_app.config[system.upper()][ver.upper()]:
