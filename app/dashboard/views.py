@@ -126,8 +126,8 @@ def upload(system):
 @dashboard.route('/uploaded_file/<filename>')
 def uploaded_file(filename):
     if re.search("zip", filename):
-        return send_from_directory(current_app.config['UPLOAD_FOLDER'], request.args.get('folder'),
-                                   filename)
+        path = os.path.join(current_app.config['UPLOAD_FOLDER'], request.args.get('folder'))
+        return send_from_directory(path, filename)
     else:
         path = os.path.join(current_app.config['PACKAGE_FOLDER'], request.args.get('folder'))
         return send_from_directory(path, filename)
