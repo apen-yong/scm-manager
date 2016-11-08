@@ -80,8 +80,10 @@ def deploy(system, wars):
 
             try:
                 lastUnsuccessfulBuildNumber = job_info['lastUnsuccessfulBuild']['number']
-                job_info['lastUnsuccessfulBuildNumber'] = jenkins_rpc.GetBuildInfo(job['name'], lastUnsuccessfulBuildNumber)
-                job_info['lastUnsuccessfulBuildDetail'] = jenkins_rpc.GetBuildInfo(job['name'], lastUnsuccessfulBuildNumber)
+                job_info['lastUnsuccessfulBuildNumber'] = jenkins_rpc.GetBuildInfo(job['name'],
+                                                                                   lastUnsuccessfulBuildNumber)
+                job_info['lastUnsuccessfulBuildDetail'] = jenkins_rpc.GetBuildInfo(job['name'],
+                                                                                   lastUnsuccessfulBuildNumber)
             except TypeError, e:
                 job_info['lastUnsuccessfulBuildDetail'] = 'null'
 
@@ -101,15 +103,23 @@ def zipfile(system, zipfile):
     return render_template('file_upload.html', current_user=current_user, system=system)
 
 
-@dashboard.route('/upload', methods=['POST', 'GET'])
-def upload():
+@dashboard.route('/upload/<system>', methods=['POST', 'GET'])
+def upload(system):
+    # TODO 上传文件后生成标准的文件名 避免出现文件冲突
+    ver = request.form['system_ver']
     if request.method == 'POST':
-        file = request.files['zipfile']
-        if file and allowed_file(file.filename):
-            file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], file.filename))
+        file_uploaded = request.files['zipfile']
+        if file_uploaded and allowed_file(file_uploaded.filename):
+            file_uploaded.save(os.path.join(current_app.config['UPLOAD_FOLDER'], "zipfiles", file_uploaded.filename))
         else:
             return "Error"
-    return render_template('file_status.html', current_user=current_user, filename=file.filename)
+    for h in current_app.config[ver.upper()]:
+        rpc_url = "http://{}:{}/api".format(h, "zipfiles", current_app.config["RPC_PORT"])
+        remote_rpc = xmlrpclib.ServerProxy(rpc_url)
+        remote_rpc.DownloadPackage("zipfiles", file_uploaded.filename)
+        remote_rpc.UpdateZipFile(file_uploaded.filename)
+    return render_template('file_status.html', current_user=current_user, filename=file_uploaded.filename,
+                           hosts=current_app.config[ver.upper()])
 
 
 @dashboard.route('/uploaded_file/<filename>')

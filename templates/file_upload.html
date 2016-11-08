@@ -4,7 +4,7 @@
     <h3 id="node" value="testinfo" class="text-muted">{{ system }} 单个文件更新：</h3>
     <hr/>
     <div class="col-md-9">
-    <form class="form-group-sm" role="form" method=POST enctype=multipart/form-data action="{{ url_for('dashboard.upload') }}">
+    <form class="form-group-sm" role="form" method=POST enctype=multipart/form-data action="{{ url_for('dashboard.upload', system=system) }}">
         <div class="form-group">
             <label for="exampleInputFile">请选择需要更新的文件包：</label>
             <input type="file" id="exampleInputFile" multiple="" name="zipfile">
@@ -12,13 +12,13 @@
         </div>
         <div class="radio">
             <label>
-            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+            <input type="radio" name="system_ver" id="test" value="test" checked>
             更新到{{ system }}的QA服务器
             </label>
         </div>
         <div class="radio">
             <label>
-            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+            <input type="radio" name="system_ver" id="prod" value="prod">
             更新到{{ system }}的正式服务器
             </label>
         </div>

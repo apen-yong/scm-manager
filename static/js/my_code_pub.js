@@ -62,6 +62,7 @@ $('#console').on('show.bs.modal', function (event) {
 $(".btn-xs").click(
     function () {
         var bt = $(this).text();
+        $(this).button("Loading...")
         var server = $(this).attr("server")
         $("#which_button").text(bt)
         $("#which_server").text(server)
@@ -178,7 +179,7 @@ function do_cmd() {
     var info = $("#which_button").text();
     var host = $("#which_server").text();
     var node_info = $("#node_info").attr('value')
-    alert(node_info)
+    // alert(node_info)
     if (info == "启动") {
         var cmd = "start";
     }

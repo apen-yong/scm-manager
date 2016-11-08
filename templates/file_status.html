@@ -13,14 +13,16 @@
           <li><a href="{{url_for('dashboard.uploaded_file', filename=filename)}}">{{ filename }}</a></li>
       </ul>
       </div>
-      <div class="header">
-        <h3 class="text-muted">更新状态</h3>
-      </div>
-      <hr/>
-          <ul>
-              <li>文件上传状态：   成功</li>
-              <li>解压缩状态：    成功</li>
-      </ul>
+        {% for h in hosts %}
+          <div class="header">
+            <h3 class="text-muted">{{ h }}:更新状态</h3>
+          </div>
+          <hr/>
+              <ul>
+                  <li>文件上传状态：   成功</li>
+                  <li>解压缩状态：    成功</li>
+          </ul>
+        {% endfor %}
       </div>
     </div>
 {% endblock %}

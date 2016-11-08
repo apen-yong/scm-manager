@@ -17,6 +17,7 @@ handler = XMLRPCHandler('api')
 handler.connect(app, '/api')
 j = jenkins.Jenkins("http://127.1:8080", 'rpcuser', '2266bcc74441b07e9c50ba468a620199')
 manager_host = '10.1.2.49'
+app_root = "/opt/scm-manager"
 package_root = "/opt/scm-manager/wars"
 tomcat_root_7 = "/home/scm/apache-tomcat-7.0.39"
 tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
@@ -76,18 +77,8 @@ def DoCmd(operate, node_info):
     print "cmd is  %s" % operate
     (system, ver) = re.split("-", node_info)
     tomcat_port = "28080" if re.match('cnshipping', system) else "8080"
-    if re.match('manufacturing', system):
-        tomcat_root = tomcat_root_8
-        package_name = "mes.{}.war".format(system)
-    elif re.match('material', system):
-        tomcat_root = tomcat_root_8
-        package_name = "{}.war".format(system)
-    elif re.match('cnshipping', system):
-        tomcat_root = tomcat_root_cscm
-        package_name = "scm.war"
-    else:
-        tomcat_root = tomcat_root_7
-        package_name = "scm.war"
+    tomcat_root = get_tomcat_root(system)
+    package_name = get_package_name(system)
     if operate == "start":
         command = "su - scm -c {}/bin/startup.sh".format(tomcat_root)
         status = [os.system(command), "nothing"]
@@ -103,11 +94,11 @@ def DoCmd(operate, node_info):
                 con = True
     elif operate == "update":
         command = "rm -fr {}/work/*; rm -fr {}/webapps/*; cp -a {}/{}/*.war {}/webapps/{}".format(tomcat_root,
-                                                                                                      tomcat_root,
-                                                                                                      package_root,
-                                                                                                      node_info,
-                                                                                                      tomcat_root,
-                                                                                                      package_name)
+                                                                                                  tomcat_root,
+                                                                                                  package_root,
+                                                                                                  node_info,
+                                                                                                  tomcat_root,
+                                                                                                  package_name)
         time.sleep(2)
         status = commands.getstatusoutput(command)
     else:
@@ -127,26 +118,16 @@ def DoCmd(operate, node_info):
 def GetProcessInfo(system, ver):
     status = {}
     tomcat_port = "28080" if system == 'cnshipping' else "8080"
-    if re.match('manufacturing', system):
-        tomcat_root = tomcat_root_8
-        package_name = "mes.{}.war".format(system)
-    elif re.match('material', system):
-        tomcat_root = tomcat_root_8
-        package_name = "{}.war".format(system)
-    elif re.match('cnshipping', system):
-        tomcat_root = tomcat_root_cscm
-        package_name = "scm.war"
-    else:
-        tomcat_root = tomcat_root_7
-        package_name = "scm.war"
+    tomcat_root = get_tomcat_root(system)
+    package_name = get_package_name(system)
     pidinfo = commands.getstatusoutput(
         'netstat -nlp | grep :{} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))
     status['qa_mtime'] = commands.getoutput(
         'stat  {}/webapps/{} | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(tomcat_root, package_name))
-    status['newest_filename'] = commands.getoutput('ls /opt/scm-manager/wars/{}-{}/'.format(system, ver)).lstrip()
+    status['newest_filename'] = commands.getoutput('ls {}/{}-{}/'.format(package_root, system, ver)).lstrip()
     status['newest_mtime'] = commands.getoutput(
-        'stat  /opt/scm-manager/wars/{}-{}/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(system,
-                                                                                                                ver))
+        'stat  {}/{}-{}/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(package_root, system,
+                                                                                             ver))
     status['load_info'] = commands.getoutput(' w |grep \'load\' | cut -d , -f 4,5,6')
     if pidinfo[1] == "":
         return status
@@ -172,13 +153,46 @@ def GetBuildInfo(name, number):
 @handler.register
 def DownloadPackage(path, filename):
     file_url = "http://{}:{}/uploaded_file/{}?folder=SCM-{}".format(manager_host, "80", filename, path)
-    download_dir = "/opt/scm-manager/wars/{}".format(path)
+    download_dir = "{}/{}".format(package_root, path)
     download_command = "aria2c -s 2 -x 2 {} -d {} -D".format(file_url, download_dir)
     print "Start to download file {}".format(download_command)
     commands.getoutput("rm -f {}/*.war".format(download_dir))
     output = commands.getoutput(download_command)
     print output
     return output
+
+
+@handler.register
+def UpdateZipFile(filename, system):
+    # 解压缩到webapps目录 要求zip包解压后是项目名称开头的文件树
+    tomcat_root = get_tomcat_root(system)
+    # package_name = get_package_name(system)
+    unzip_info = commands.getstatusoutput("unzip {}/zipfiles/{} -d {}/webapps".format(app_root, filename, tomcat_root))
+    return unzip_info
+
+
+def get_tomcat_root(system):
+    if re.match('manufacturing', system):
+        tomcat_root = tomcat_root_8
+    elif re.match('material', system):
+        tomcat_root = tomcat_root_8
+    elif re.match('cnshipping', system):
+        tomcat_root = tomcat_root_cscm
+    else:
+        tomcat_root = tomcat_root_7
+    return tomcat_root
+
+
+def get_package_name(system):
+    if re.match('manufacturing', system):
+        package_name = "mes.{}.war".format(system)
+    elif re.match('material', system):
+        package_name = "{}.war".format(system)
+    elif re.match('cnshipping', system):
+        package_name = "scm.war"
+    else:
+        package_name = "scm.war"
+    return package_name
 
 
 app.run('0.0.0.0', port=8085, debug=True)
