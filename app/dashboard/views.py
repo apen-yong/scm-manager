@@ -113,7 +113,7 @@ def upload(system):
             file_uploaded.save(os.path.join(current_app.config['UPLOAD_FOLDER'], "zipfiles", file_uploaded.filename))
         else:
             return "Error"
-    for h in current_app.config[system][ver.upper()]:
+    for h in current_app.config[system.upper()][ver.upper()]:
         rpc_url = "http://{}:{}/api".format(h, "zipfiles", current_app.config["RPC_PORT"])
         remote_rpc = xmlrpclib.ServerProxy(rpc_url)
         remote_rpc.DownloadPackage("zipfiles", file_uploaded.filename)
