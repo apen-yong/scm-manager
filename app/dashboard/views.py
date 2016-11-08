@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Created by follow on 2016/10/20
-from flask import Blueprint, current_app, send_from_directory
+from flask import Blueprint, current_app, send_from_directory, redirect
 import os
 from flask import url_for, render_template, request
 import xmlrpclib
@@ -31,7 +31,8 @@ def index():
 
 @dashboard.route('/show/<system>')
 def show(system):
-    return render_template('system_detail.html', current_user=current_user, system=system)
+    # return render_template('system_detail.html', current_user=current_user, system=system)
+    return redirect(url_for('dashboard.deploy', system=system, wars="wars"))
 
 
 @dashboard.route('/server_status/<system>/<ver>')
