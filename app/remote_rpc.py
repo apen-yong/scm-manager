@@ -11,6 +11,7 @@ import base64
 import commands
 import os
 import re
+import subprocess
 
 app = Flask(__name__)
 handler = XMLRPCHandler('api')
@@ -81,7 +82,8 @@ def DoCmd(operate, node_info):
     package_name = get_package_name(system)
     if operate == "start":
         command = "su - scm -c {}/bin/startup.sh".format(tomcat_root)
-        status = [os.system(command), "nothing"]
+        child = subprocess.Popen(command)
+        status = [child.pid, "nothing"]
         con = False
         while not con:
             pidinfo = commands.getstatusoutput(
