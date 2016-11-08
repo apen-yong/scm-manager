@@ -118,7 +118,7 @@ def upload(system):
         rpc_url = "http://{}:{}/api".format(h, current_app.config["RPC_PORT"])
         remote_rpc = xmlrpclib.ServerProxy(rpc_url)
         remote_rpc.DownloadPackage("zipfiles", file_uploaded.filename)
-        remote_rpc.UpdateZipFile(file_uploaded.filename, system)
+        unzip_info = remote_rpc.UpdateZipFile(file_uploaded.filename, system)
     return render_template('file_status.html', current_user=current_user, filename=file_uploaded.filename,
                            hosts=current_app.config[system.upper()][ver.upper()])
 

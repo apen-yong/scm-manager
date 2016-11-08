@@ -82,7 +82,7 @@ def DoCmd(operate, node_info):
     package_name = get_package_name(system)
     if operate == "start":
         command = "su - scm -c {}/bin/startup.sh".format(tomcat_root)
-        child = subprocess.Popen(command)
+        child = subprocess.Popen(command, shell=True)
         status = [child.pid, "nothing"]
         con = False
         while not con:
@@ -155,7 +155,7 @@ def GetBuildInfo(name, number):
 @handler.register
 def DownloadPackage(path, filename):
     file_url = "http://{}:{}/uploaded_file/{}?folder=SCM-{}".format(manager_host, "80", filename, path)
-    download_dir = "{}/{}".format(package_root, path)
+    download_dir = "{}/wars/{}".format(app_root, path)
     download_command = "aria2c -s 2 -x 2 {} -d {} -D".format(file_url, download_dir)
     print "Start to download file {}".format(download_command)
     commands.getoutput("rm -f {}/*.war".format(download_dir))
@@ -170,6 +170,7 @@ def UpdateZipFile(filename, system):
     tomcat_root = get_tomcat_root(system)
     # package_name = get_package_name(system)
     unzip_info = commands.getstatusoutput("unzip {}/zipfiles/{} -d {}/webapps".format(app_root, filename, tomcat_root))
+    print unzip_info
     return unzip_info
 
 
