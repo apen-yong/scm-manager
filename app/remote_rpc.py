@@ -53,9 +53,7 @@ def GetJobs():
 @handler.register
 def GetBuildConsoleOutput(name, number):
     data = j.get_build_console_output(name, number)
-    d1 = base64.b64encode(data)
-    print d1
-    return d1
+    return data
 
 
 @handler.register
