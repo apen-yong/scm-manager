@@ -53,7 +53,9 @@ def GetJobs():
 @handler.register
 def GetBuildConsoleOutput(name, number):
     data = j.get_build_console_output(name, number)
-    return data
+    data_encode = data.encode('utf-8')
+    print data_encode
+    return data_encode
 
 
 @handler.register

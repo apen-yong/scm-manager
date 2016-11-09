@@ -216,5 +216,5 @@ def get_console():
     rpc_url = "http://{}:{}/api".format(current_app.config['RPC_SERVER'], current_app.config["RPC_PORT"])
     jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
     log = jenkins_rpc.GetBuildConsoleOutput(name, int(deploy_id))
-    human_readable_log = re.sub("\n", "</br>", log)
+    human_readable_log = re.sub("\n", "</br>", log.decode("utf-8"))
     return human_readable_log
