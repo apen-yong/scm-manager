@@ -78,20 +78,53 @@
                         <td>待更新war包 时间戳</td>
                         <td>{{ v.get('newest_mtime') }}</td>
                     </tr>
-                          <tr>
+                    <tr>
                         <td>待更新war包 文件名</td>
                         <td>{{ v.get('newest_filename', None) }}</td>
                     </tr>
-{#                    <tr>#}
-{#                        <td>包同步状态</td>#}
-{#                        <td>同步中</td>#}
-{#                    </tr>#}
+                    <tr>
+                        <td>war包下载状态</td>
+                        <td>
+                            {% if v.get("aria_status", None)[0] == 0 %}
+                                <img src="/static/img/blue_anime.gif" tooltip="运行中"
+                                     style="width: 18px; height: 18px;"><img>正在下载
+                                <script language="JavaScript">
+                                    function myrefresh() {
+                                        window.location.reload();
+                                    }
+                                    setTimeout('myrefresh()', 5000);
+                                </script>
+                            {% else %}
+                                <img src="/static/img/blue.png" tooltip="运行中"
+                                     style="width: 18px; height: 18px; "><img>下载完成
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>更新状态</td>
+                        <td>
+                            {% if v.get('qa_mtime') == v.get('newest_mtime') %}
+                                <span
+                                        class="glyphicon glyphicon-ok "></span>
+                            {% else %}
+                                <span
+                                        class="glyphicon glyphicon-remove "></span>
+                            {% endif %}
+
+                        </td>
+                    </tr>
                     <tr>
                         <td>执行命令</td>
                         <td>
-                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm" server="{{ k }}">关闭</button>
-                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm" server="{{ k }}">更新</button>
-                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm" server="{{ k }}">启动</button>
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
+                                    server="{{ k }}">关闭
+                            </button>
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
+                                    server="{{ k }}">更新
+                            </button>
+                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
+                                    server="{{ k }}">启动
+                            </button>
 
                         </td>
                     </tr>

@@ -53,9 +53,7 @@ def GetJobs():
 @handler.register
 def GetBuildConsoleOutput(name, number):
     data = j.get_build_console_output(name, number)
-    data = re.sub('‘', '"', data)
-    data_encode = base64.b64encode(data)
-    print data_encode
+    data_encode = base64.b64encode(data.encode("utf-8"))
     return data_encode
 
 
@@ -125,6 +123,7 @@ def GetProcessInfo(system, ver):
     status['qa_mtime'] = commands.getoutput(
         'stat  {}/webapps/{} | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(tomcat_root, package_name))
     status['newest_filename'] = commands.getoutput('ls {}/{}-{}/'.format(package_root, system, ver)).lstrip()
+    status['aria_status'] = commands.getstatusoutput('ps -ef| grep aria| grep -v grep')
     status['newest_mtime'] = commands.getoutput(
         'stat  {}/{}-{}/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(package_root, system,
                                                                                              ver))

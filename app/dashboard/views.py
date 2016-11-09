@@ -193,9 +193,15 @@ def package_sync(system, ver):
                                                         current_app.config["RPC_PORT"])
             jenkins_rpc = xmlrpclib.ServerProxy(jenkins_rpc_url)
             job_info = eval(jenkins_rpc.GetJobInfo("{}-{}".format(system, ver).lower()))
-            lastSuccessfulBuildNumber = job_info['lastSuccessfulBuild']['number'] + 1
+            # TODO 解决如果次打包失败，当前打包ID计算错误的问题
+            lastUnsuccessfulBuildNumber = job_info['lastUnsuccessfulBuild']['number']
+            lastSuccessfulBuildNumber = job_info['lastSuccessfulBuild']['number']
+            if lastSuccessfulBuildNumber < lastUnsuccessfulBuildNumber:
+                package_id = lastUnsuccessfulBuildNumber + 1
+            else:
+                package_id = lastSuccessfulBuildNumber + 1
             date = time.strftime("%Y%m%d", time.localtime(time.time()))
-            package_name = "SCM-{}-{}-{}.war".format(system, date, lastSuccessfulBuildNumber)
+            package_name = "SCM-{}-{}-{}.war".format(system, date, package_id)
             folder = "{}-{}".format(system, ver)
 
             remote_rpc_url = "http://{}:{}/api".format(host, current_app.config["RPC_PORT"])
@@ -216,5 +222,5 @@ def get_console():
     rpc_url = "http://{}:{}/api".format(current_app.config['RPC_SERVER'], current_app.config["RPC_PORT"])
     jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
     log = jenkins_rpc.GetBuildConsoleOutput(name, int(deploy_id))
-    human_readable_log = re.sub("\n", "</br>", base64.b64decode(log))
+    human_readable_log = re.sub("\n", "</br>", base64.b64decode(log).decode("utf-8"))
     return human_readable_log
