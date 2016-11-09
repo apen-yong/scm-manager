@@ -35,21 +35,18 @@ def Hello(name='follow'):
 @handler.register
 def GetInfo():
     data = j.get_info()
-    print data
     return data
 
 
 @handler.register
 def GetQueueInfo():
     data = j.get_queue_info()
-    print data
     return data
 
 
 @handler.register
 def GetJobs():
     data = j.get_jobs()
-    print data
     return data
 
 
