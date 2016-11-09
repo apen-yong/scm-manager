@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Created by follow on 2016/10/20
+import base64
+
 from flask import Blueprint, current_app, send_from_directory, redirect
 import os
 from flask import url_for, render_template, request
@@ -203,3 +205,16 @@ def package_sync(system, ver):
         print "connect rpc server error:{}".format(e)
         return "Error: {}".format(e)
     return "Success start download file."
+
+
+@dashboard.route('/api/get_console')
+def get_console():
+    name = request.args.get('name')
+    deploy_id = request.args.get('id')
+    if deploy_id == 'magic':
+        return ''
+    rpc_url = "http://{}:{}/api".format(current_app.config['RPC_SERVER'], current_app.config["RPC_PORT"])
+    jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
+    log = jenkins_rpc.GetBuildConsoleOutput(name, int(deploy_id))
+    human_readable_log = re.sub("\n", "</br>", base64.b64decode(log))
+    return human_readable_log

@@ -22,7 +22,7 @@ function force_commit() {
 }
 
 function get_console(name, id) {
-    $.get("./get_console?name=" + name + "&id=" + id,
+    $.get("./api/get_console?name=" + name + "&id=" + id,
         function (data, status) {
             if (status == "success") {
                 $('#console').text("hello console")
@@ -35,16 +35,15 @@ function get_console(name, id) {
 
 $('#console').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
-    var recipient = button.data('whatever');
-    var name = $('#jobname').text();
+    var name = button.data('jobname')
     var id = button.data('jobid');
     if (!id) {
         id = 'magic'
     }
-    $.get("./get_console?name=" + name + "&id=" + id,
+    $.get("/api/get_console?name=" + name + "&id=" + id,
         function (data, status) {
             if (status == "success") {
-                $('#console_body').empty().append("<b>Hello Follow</b></br>" + data);
+                $('#console_body').empty().append("<b>MVN控制台输出信息：</b></br>" + data);
                 //var modal = $(this)
                 //modal.find('#console_body').text('New message to</br>' + "data")
             } else {
