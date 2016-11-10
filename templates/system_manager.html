@@ -118,8 +118,13 @@
                         <td>
                             <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
                                     server="{{ k }}">关闭</button>
-                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
-                                    server="{{ k }}">更新</button>
+                            {% if v.get("aria_status", None)[0] == 0 %}
+                                <button class="btn btn-primary btn-xs disabled"
+                                        server="{{ k }}">等待下载</button>
+                            {% else %}
+                                <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
+                                        server="{{ k }}">更新</button>
+                            {% endif %}
                             <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
                                     server="{{ k }}">启动</button>
 
