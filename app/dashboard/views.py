@@ -196,11 +196,13 @@ def package_sync(system, ver):
             # TODO 解决如果次打包失败，当前打包ID计算错误的问题
             if not job_info['lastUnsuccessfulBuild']:
                 lastUnsuccessfulBuildNumber = 0
-            elif not job_info['lastSuccessfulBuild']:
-                lastUnsuccessfulBuildNumber = 0
             else:
                 lastUnsuccessfulBuildNumber = job_info['lastUnsuccessfulBuild']['number']
+            if not job_info['lastSuccessfulBuild']:
+                lastSuccessfulBuildNumber = 0
+            else:
                 lastSuccessfulBuildNumber = job_info['lastSuccessfulBuild']['number']
+
             if lastSuccessfulBuildNumber < lastUnsuccessfulBuildNumber:
                 package_id = lastUnsuccessfulBuildNumber + 1
             else:
