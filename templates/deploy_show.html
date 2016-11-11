@@ -2,7 +2,7 @@
 {% block title %} 项目打包发布 {% endblock %}
 {% block content %}
 
-    <h3 id="node" value="testinfo" class="text-muted">{{ system }} 新建war包：</h3>
+    <h3 id="node" value="testinfo" class="text-muted" xmlns="http://www.w3.org/1999/html">{{ system }} 新建war包：</h3>
     <hr/>
     <div class="col-md-10">
         <table class="table table-striped table-hove" role="table" style="font-size:9pt" id=jobname value
@@ -13,7 +13,6 @@
                 <th>上次成功</th>
                 <th>上次失败</th>
                 <th>上次打包耗时</th>
-                <th>操作</th>
             </tr>
             {% for k, v in job_info.items() %}
                 <tr>
@@ -62,7 +61,7 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a data-toggle="modal" data-target=".bs-example-modal-lg"
                                        data-jobid={{ v.lastUnsuccessfulBuildDetail.id }}
-                                    data-jobname={{ k }}>
+                                               data-jobname={{ k }}>
                                     <small>查看本次控制台输出</small>
                                 </a></li>
                                 <li class="disabled"><a href="#">
@@ -77,13 +76,15 @@
                     </td>
                     <td>{{ v.lastCompletedBuildDetail.duration }}秒</td>
                     <td>
-                        <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm">
-                            新建war包
-                        </button>
+
                     </td>
                 </tr>
             {% endfor %}
         </table>
+    <hr/>
+        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myconfirm">
+            开始打包
+        </button>
 
     </div>
     <!-- Large modal -->

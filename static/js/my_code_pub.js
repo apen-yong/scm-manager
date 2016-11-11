@@ -1,6 +1,7 @@
 function get_confirm() {
     var name = $('#jobname').attr('value');
-    var btn = $('#submit').button('loading');
+    var btn = $('#submit');
+    btn.button('loading')
     $.get("/api/deploy/" + name,
         function (data, status) {
             if (data == "true") {
@@ -61,7 +62,7 @@ $('#console').on('show.bs.modal', function (event) {
 $(".btn-xs").click(
     function () {
         var bt = $(this).text();
-        $(this).button("Loading...")
+        // $(this).button("loading")
         var server = $(this).attr("server")
         $("#which_button").text(bt)
         $("#which_server").text(server)
@@ -178,6 +179,7 @@ function do_cmd() {
     var info = $("#which_button").text();
     var host = $("#which_server").text();
     var node_info = $("#node_info").attr('value')
+    $("#submit").button("loading")
     // alert(node_info)
     if (info == "启动") {
         var cmd = "start";
