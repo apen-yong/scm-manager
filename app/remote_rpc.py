@@ -23,6 +23,7 @@ package_root = "/opt/scm-manager/wars"
 tomcat_root_7 = "/home/scm/apache-tomcat-7.0.39"
 tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
 tomcat_root_cscm = "/home/cscm/apache-tomcat-7.0.39"
+tomcat_root_iscm = "/home/cscm/apache-tomcat-7.0.39"
 
 
 @handler.register
@@ -178,6 +179,8 @@ def get_tomcat_root(system):
         tomcat_root = tomcat_root_8
     elif re.match('cnshipping', system):
         tomcat_root = tomcat_root_cscm
+    elif re.match('usshipping', system):
+        tomcat_root = tomcat_root_iscm
     else:
         tomcat_root = tomcat_root_7
     return tomcat_root
@@ -188,8 +191,6 @@ def get_package_name(system):
         package_name = "mes.{}.war".format(system)
     elif re.match('material', system):
         package_name = "{}.war".format(system)
-    elif re.match('cnshipping', system):
-        package_name = "scm.war"
     else:
         package_name = "scm.war"
     return package_name
