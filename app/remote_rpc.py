@@ -23,7 +23,11 @@ package_root = "/opt/scm-manager/wars"
 tomcat_root_7 = "/home/scm/apache-tomcat-7.0.39"
 tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
 tomcat_root_cscm = "/home/cscm/apache-tomcat-7.0.39"
-tomcat_root_iscm = "/home/cscm/apache-tomcat-7.0.39"
+tomcat_root_iscm = "/home/iscm/apache-tomcat-7.0.39"
+
+cscm_user = "cscm"
+iscm_user = "iscm"
+scm_user = "scm"
 
 
 @handler.register
@@ -76,9 +80,10 @@ def DoCmd(operate, node_info):
     (system, ver) = re.split("-", node_info)
     tomcat_port = "28080" if re.match('cnshipping', system) else "8080"
     tomcat_root = get_tomcat_root(system)
+    tomcat_user = get_tomcat_user(system)
     package_name = get_package_name(system)
     if operate == "start":
-        command = "su - scm -c {}/bin/startup.sh".format(tomcat_root)
+        command = "su - {} -c {}/bin/startup.sh".format(tomcat_user, tomcat_root)
         child = subprocess.Popen(command, shell=True)
         status = [child.pid, "nothing"]
         con = False
@@ -194,6 +199,16 @@ def get_package_name(system):
     else:
         package_name = "scm.war"
     return package_name
+
+
+def get_tomcat_user(system):
+    if re.match("cnshipping", system):
+        user = cscm_user
+    elif re.match("usshipping", system):
+        user = iscm_user
+    else:
+        user = scm_user
+    return user
 
 
 app.run('0.0.0.0', port=8085, debug=True)
