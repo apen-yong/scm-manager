@@ -214,4 +214,4 @@ def get_tomcat_user(system):
     return user
 
 
-app.run('0.0.0.0', port=8085, debug=True)
+app.run('0.0.0.0', port=8085, debug=True, use_reloader=True)
