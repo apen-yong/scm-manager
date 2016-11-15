@@ -90,7 +90,7 @@ def DoCmd(operate, node_info):
         con = False
         while not con:
             pidinfo = commands.getstatusoutput(
-                'netstat -nlp | grep {} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))
+                'netstat -nlp | grep :{} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))
             print "pid is:%s" % str(pidinfo[1])
             if not re.match("\d", pidinfo[1]):
                 print "sleep"
@@ -109,7 +109,7 @@ def DoCmd(operate, node_info):
     else:
         pid = \
             commands.getstatusoutput(
-                'netstat -nlp | grep {} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))[1]
+                'netstat -nlp | grep :{} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))[1]
         if re.match("\d", pid):
             command = "kill -9 %s" % pid
             status = commands.getstatusoutput(command)
@@ -214,4 +214,4 @@ def get_tomcat_user(system):
     return user
 
 
-app.run('0.0.0.0', port=8085, debug=True, use_reloader=True)
+app.run('0.0.0.0', port=8085, use_reloader=True)
