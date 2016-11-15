@@ -28,6 +28,7 @@ tomcat_root_iscm = "/home/iscm/apache-tomcat-7.0.39"
 cscm_user = "cscm"
 iscm_user = "iscm"
 scm_user = "scm"
+mes_user = "mes"
 
 
 @handler.register
@@ -206,6 +207,8 @@ def get_tomcat_user(system):
         user = cscm_user
     elif re.match("usshipping", system):
         user = iscm_user
+    elif re.match("manufacturing|material", system):
+        user = mes_user
     else:
         user = scm_user
     return user
