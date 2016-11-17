@@ -14,71 +14,73 @@
                 <th>上次失败</th>
                 <th>上次打包耗时</th>
             </tr>
-            {% for k, v in job_info.items() %}
-                <tr>
-                    <td name=jobname>{{ k }}</td>
-                    <td id=status_html_{{ k }}>UNKNOW</td>
-                    <td>
-                        {{ v.lastSuccessfulBuildDetail.timestamp }}, 序号:
-                        <!-- Split button -->
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-xs "><b>
-                                #{{ v.lastSuccessfulBuildDetail.id }}</b></button>
-                            <button type="button" class="btn btn-primary dropdown-toggle btn-xs " data-toggle="dropdown"
-                                    aria-expanded="false">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a data-toggle="modal" data-target=".bs-example-modal-lg"
-                                       data-jobid={{ v.lastSuccessfulBuildDetail.id }}
-                                               data-jobname={{ k }}>
-                                    <small>查看本次控制台输出</small>
-                                </a></li>
-                                <li class="disabled"><a href="#">
-                                    <small>下载这个war包</small>
-                                </a></li>
-                                <li class="divider"></li>
-                                <li class="disabled"><a href="#">
-                                    <small>删除我</small>
-                                </a></li>
-                            </ul>
-                        </div>
+            {% for j in job_info %}
+                {% for (k, v) in j.items() %}
+                    <tr>
+                        <td name=jobname>{{ k }}</td>
+                        <td id=status_html_{{ k }}>UNKNOW</td>
+                        <td>
+                            {{ v.lastSuccessfulBuildDetail.timestamp }}, 序号:
+                            <!-- Split button -->
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary btn-xs "><b>
+                                    #{{ v.lastSuccessfulBuildDetail.id }}</b></button>
+                                <button type="button" class="btn btn-primary dropdown-toggle btn-xs " data-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a data-toggle="modal" data-target=".bs-example-modal-lg"
+                                           data-jobid={{ v.lastSuccessfulBuildDetail.id }}
+                                                   data-jobname={{ k }}>
+                                        <small>查看本次控制台输出</small>
+                                    </a></li>
+                                    <li class="disabled"><a href="#">
+                                        <small>下载这个war包</small>
+                                    </a></li>
+                                    <li class="divider"></li>
+                                    <li class="disabled"><a href="#">
+                                        <small>删除我</small>
+                                    </a></li>
+                                </ul>
+                            </div>
 
-                    </td>
-                    <td>
-                        {{ v.lastUnsuccessfulBuildDetail.timestamp }} 序号:
+                        </td>
+                        <td>
+                            {{ v.lastUnsuccessfulBuildDetail.timestamp }} 序号:
 
-                        <!-- Split button -->
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-danger btn-xs "><b>
-                                #{{ v.lastUnsuccessfulBuildDetail.id }}</b></button>
-                            <button type="button" class="btn btn-danger dropdown-toggle btn-xs " data-toggle="dropdown"
-                                    aria-expanded="false">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a data-toggle="modal" data-target=".bs-example-modal-lg"
-                                       data-jobid={{ v.lastUnsuccessfulBuildDetail.id }}
-                                               data-jobname={{ k }}>
-                                    <small>查看本次控制台输出</small>
-                                </a></li>
-                                <li class="disabled"><a href="#">
-                                    <small>下载这个war包</small>
-                                </a></li>
-                                <li class="divider"></li>
-                                <li class="disabled"><a href="#">
-                                    <small>删除我</small>
-                                </a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>{{ v.lastCompletedBuildDetail.duration }}秒</td>
-                    <td>
+                            <!-- Split button -->
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger btn-xs "><b>
+                                    #{{ v.lastUnsuccessfulBuildDetail.id }}</b></button>
+                                <button type="button" class="btn btn-danger dropdown-toggle btn-xs " data-toggle="dropdown"
+                                        aria-expanded="false">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a data-toggle="modal" data-target=".bs-example-modal-lg"
+                                           data-jobid={{ v.lastUnsuccessfulBuildDetail.id }}
+                                                   data-jobname={{ k }}>
+                                        <small>查看本次控制台输出</small>
+                                    </a></li>
+                                    <li class="disabled"><a href="#">
+                                        <small>下载这个war包</small>
+                                    </a></li>
+                                    <li class="divider"></li>
+                                    <li class="disabled"><a href="#">
+                                        <small>删除我</small>
+                                    </a></li>
+                                </ul>
+                            </div>
+                        </td>
+                        <td>{{ v.lastCompletedBuildDetail.duration }}秒</td>
+                        <td>
 
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                    {% endfor %}
             {% endfor %}
         </table>
     <hr/>

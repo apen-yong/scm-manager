@@ -66,7 +66,7 @@ def deploy(system, wars):
         rpc_url = "http://{}:{}/api".format(current_app.config['RPC_SERVER'], current_app.config["RPC_PORT"])
         jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
         deploy_env = current_app.config['DEPLOY_ENV']
-        jobdata = {}
+        jobdata = []
         info = jenkins_rpc.GetInfo()
 
         for job in info['jobs']:
@@ -74,7 +74,6 @@ def deploy(system, wars):
                 continue
             color = job['color']
             job_info = eval(jenkins_rpc.GetJobInfo(job['name']))
-            jobdata[job['name']] = job_info
             try:
                 lastSuccessfulBuildNumber = job_info['lastSuccessfulBuild']['number']
                 job_info['lastSuccessfulBuildDetail'] = jenkins_rpc.GetBuildInfo(job['name'], lastSuccessfulBuildNumber)
@@ -95,6 +94,12 @@ def deploy(system, wars):
                 job_info['lastCompletedBuildDetail'] = jenkins_rpc.GetBuildInfo(job['name'], lastCompletedBuildNumber)
             except TypeError, e:
                 job_info['lastCompletedBuildNumber'] = None
+
+            if re.search("test", job['name']):
+                jobdata.insert(0, {job['name']: job_info})
+            else:
+                jobdata.insert(1, {job['name']: job_info})
+
     except socket.error, e:
         return "Can not connect to remote jenkins. {}".format(e)
     return render_template('deploy_show.html', current_user=current_user, system=system, deploy_env=deploy_env,
