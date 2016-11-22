@@ -82,7 +82,7 @@ def DoCmd(operate, node_info):
     tomcat_port = "28080" if re.match('cnshipping', system) else "8080"
     tomcat_root = get_tomcat_root(system)
     tomcat_user = get_tomcat_user(system)
-    package_name = get_package_name(system)
+    package_name = get_package_prefix(system) + ".war"
     if operate == "start":
         command = "su - {} -c {}/bin/startup.sh".format(tomcat_user, tomcat_root)
         child = subprocess.Popen(command, shell=True)
@@ -98,12 +98,14 @@ def DoCmd(operate, node_info):
             else:
                 con = True
     elif operate == "update":
-        command = "rm -fr {}/work/*; rm -fr {}/webapps/*; cp -a {}/{}/*.war {}/webapps/{}".format(tomcat_root,
-                                                                                                  tomcat_root,
-                                                                                                  package_root,
-                                                                                                  node_info,
-                                                                                                  tomcat_root,
-                                                                                                  package_name)
+        command = "rm -fr {}/work/*; rm -fr {}/webapps/{}*; cp -a {}/{}/*.war {}/webapps/{}".format(tomcat_root,
+                                                                                                    tomcat_root,
+                                                                                                    get_package_prefix(
+                                                                                                        system),
+                                                                                                    package_root,
+                                                                                                    node_info,
+                                                                                                    tomcat_root,
+                                                                                                    package_name)
         time.sleep(2)
         status = commands.getstatusoutput(command)
     else:
@@ -124,7 +126,7 @@ def GetProcessInfo(system, ver):
     status = {}
     tomcat_port = "28080" if system == 'cnshipping' else "8080"
     tomcat_root = get_tomcat_root(system)
-    package_name = get_package_name(system)
+    package_name = get_package_prefix(system) + ".war"
     pidinfo = commands.getstatusoutput(
         'netstat -nlp | grep :{} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))
     status['qa_mtime'] = commands.getoutput(
@@ -192,14 +194,14 @@ def get_tomcat_root(system):
     return tomcat_root
 
 
-def get_package_name(system):
+def get_package_prefix(system):
     if re.match('manufacturing', system):
-        package_name = "mes.{}.war".format(system)
+        package_prefix = "mes.{}".format(system)
     elif re.match('material', system):
-        package_name = "{}.war".format(system)
+        package_prefix = system
     else:
-        package_name = "scm.war"
-    return package_name
+        package_prefix = "scm"
+    return package_prefix
 
 
 def get_tomcat_user(system):
