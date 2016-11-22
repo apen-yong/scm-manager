@@ -21,9 +21,11 @@
             <ul>
                 <li>文件上传状态： 成功</li>
                 <li>解压缩状态：
-                    {% for i in info %}
-                        {{ i }}<\br>
-                    {% endfor %}
+                    <ul>
+                        {% for i in info %}
+                            <li>{{ i }}</li>
+                        {% endfor %}
+                    </ul>
                 </li>
 
             </ul>
