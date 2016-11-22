@@ -3,26 +3,31 @@
 {% block content %}
     <p></p>
     <div class="col-md-9">
-<div class="header">
-        <h3 class="text-muted">文件列表</h3>
-      </div>
-      <hr/>
-      <div>
-      This is a list of the files you just uploaded, click on them to load/download them
-      <ul>
-          <li><a href="{{url_for('dashboard.uploaded_file', filename=filename)}}">{{ filename }}</a></li>
-      </ul>
-      </div>
+        <div class="header">
+            <h3 class="text-muted">文件列表</h3>
+        </div>
+        <hr/>
+        <div>
+            This is a list of the files you just uploaded, click on them to load/download them
+            <ul>
+                <li><a href="{{ url_for('dashboard.uploaded_file', filename=filename) }}">{{ filename }}</a></li>
+            </ul>
+        </div>
         {% for h in hosts %}
-          <div class="header">
-            <h3 class="text-muted">{{ h }}:更新状态</h3>
-          </div>
-          <hr/>
-              <ul>
-                  <li>文件上传状态：   成功</li>
-                  <li>解压缩状态： {{ info }}</li>
-          </ul>
+            <div class="header">
+                <h3 class="text-muted">{{ h }}:更新状态</h3>
+            </div>
+            <hr/>
+            <ul>
+                <li>文件上传状态： 成功</li>
+                <li>解压缩状态：
+                    {% for i in info %}
+                        {{ i }}
+                    {% endfor %}
+                </li>
+
+            </ul>
         {% endfor %}
-      </div>
+    </div>
     </div>
 {% endblock %}
