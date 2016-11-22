@@ -128,9 +128,10 @@ def upload(system):
         remote_rpc = xmlrpclib.ServerProxy(rpc_url)
         remote_rpc.DownloadPackage("zipfiles", zip_file_name)
         unzip_info = remote_rpc.UpdateZipFile(zip_file_name, system)
+        inflating_data = re.split("\n", unzip_info[1])
     return render_template('file_status.html', zip_file_name=zip_file_name, current_user=current_user,
                            filename=file_uploaded.filename,
-                           hosts=current_app.config[system.upper()][ver.upper()], info=unzip_info, system=system)
+                           hosts=current_app.config[system.upper()][ver.upper()], info=inflating_data, system=system)
 
 
 @dashboard.route('/uploaded_file/<filename>')
