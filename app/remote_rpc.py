@@ -177,7 +177,7 @@ def UpdateZipFile(filename, system):
     tomcat_user = get_tomcat_user(system)
     # package_name = get_package_name(system)
     for i in xrange(10):
-        if commands.getstatusoutput('ps -ef| grep aria| grep -v grep')[0]:
+        if commands.getstatusoutput('ps -ef| grep aria| grep -v grep')[0] == 0:
             time.sleep(1)
         else:
             unzip_info = commands.getstatusoutput(
