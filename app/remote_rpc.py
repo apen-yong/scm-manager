@@ -180,9 +180,9 @@ def UpdateZipFile(filename, system):
             time.sleep(1)
         else:
             unzip_info = commands.getstatusoutput(
-                "sudo -u {} unzip -o {}/wars/zipfiles/{} -d {}/webapps{}".format(tomcat_user, app_root, filename,
-                                                                                 tomcat_root,
-                                                                                 get_package_prefix(system)))
+                "sudo -u {} unzip -o {}/wars/zipfiles/{} -d {}/webapps/{}".format(tomcat_user, app_root, filename,
+                                                                                  tomcat_root,
+                                                                                  get_package_prefix(system)))
             break
     print unzip_info
     return unzip_info
