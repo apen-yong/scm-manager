@@ -115,7 +115,8 @@ def zipfile(system, zipfile):
 def upload(system):
     # TODO 上传文件后生成标准的文件名 避免出现文件冲突
     ver = request.form['system_ver']
-    zip_file_name = get_package_prefix(system) + ".zip"
+    zip_file_name = get_package_prefix(system) + "-{}.zip".format(
+        time.strftime("%Y%M%d-%H", time.localtime(time.time())))
     if request.method == 'POST':
         file_uploaded = request.files['zipfile']
         if file_uploaded and allowed_file(file_uploaded.filename):
