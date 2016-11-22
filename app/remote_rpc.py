@@ -176,8 +176,14 @@ def UpdateZipFile(filename, system):
     tomcat_root = get_tomcat_root(system)
     tomcat_user = get_tomcat_user(system)
     # package_name = get_package_name(system)
-    unzip_info = commands.getstatusoutput(
-        "sudo -u {} unzip {}/wars/zipfiles/{} -d {}/webapps".format(tomcat_user, app_root, filename, tomcat_root))
+    for i in xrange(10):
+        if commands.getstatusoutput('ps -ef| grep aria| grep -v grep')[0]:
+            time.sleep(1)
+        else:
+            unzip_info = commands.getstatusoutput(
+                "sudo -u {} unzip {}/wars/zipfiles/{} -d {}/webapps".format(tomcat_user, app_root, filename,
+                                                                            tomcat_root))
+            break
     print unzip_info
     return unzip_info
 
