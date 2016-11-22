@@ -10,7 +10,7 @@
         <div>
             This is a list of the files you just uploaded, click on them to load/download them
             <ul>
-                <li><a href="{{ url_for('dashboard.uploaded_file', filename=filename) }}">{{ filename }}</a></li>
+                <li><a href="{{ url_for('dashboard.uploaded_file', filename=zip_file_name) }}">{{ filename }}</a></li>
             </ul>
         </div>
         {% for h in hosts %}
