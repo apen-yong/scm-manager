@@ -115,20 +115,21 @@ def zipfile(system, zipfile):
 def upload(system):
     # TODO 上传文件后生成标准的文件名 避免出现文件冲突
     ver = request.form['system_ver']
+    zip_file_name = get_package_prefix(system) + ".zip"
     if request.method == 'POST':
         file_uploaded = request.files['zipfile']
         if file_uploaded and allowed_file(file_uploaded.filename):
             file_uploaded.save(
-                os.path.join(current_app.config['UPLOAD_FOLDER'], "SCM-zipfiles", file_uploaded.filename))
+                os.path.join(current_app.config['UPLOAD_FOLDER'], "SCM-zipfiles", zip_file_name))
         else:
             return "Error"
     for h in current_app.config[system.upper()][ver.upper()]:
         rpc_url = "http://{}:{}/api".format(h, current_app.config["RPC_PORT"])
         remote_rpc = xmlrpclib.ServerProxy(rpc_url)
-        remote_rpc.DownloadPackage("zipfiles", file_uploaded.filename)
-        unzip_info = remote_rpc.UpdateZipFile(file_uploaded.filename, system)
+        remote_rpc.DownloadPackage("zipfiles", zip_file_name)
+        unzip_info = remote_rpc.UpdateZipFile(zip_file_name, system)
     return render_template('file_status.html', current_user=current_user, filename=file_uploaded.filename,
-                           hosts=current_app.config[system.upper()][ver.upper()])
+                           hosts=current_app.config[system.upper()][ver.upper()], info=unzip_info)
 
 
 @dashboard.route('/uploaded_file/<filename>')
@@ -236,3 +237,13 @@ def get_console():
     log = jenkins_rpc.GetBuildConsoleOutput(name, int(deploy_id))
     human_readable_log = re.sub("\n", "</br>", base64.b64decode(log).decode("utf-8"))
     return human_readable_log
+
+
+def get_package_prefix(system):
+    if re.match('manufacturing', system):
+        package_prefix = "mes.{}".format(system)
+    elif re.match('material', system):
+        package_prefix = system
+    else:
+        package_prefix = "scm"
+    return package_prefix

@@ -174,8 +174,10 @@ def DownloadPackage(path, filename):
 def UpdateZipFile(filename, system):
     # 解压缩到webapps目录 要求zip包解压后是项目名称开头的文件树
     tomcat_root = get_tomcat_root(system)
+    tomcat_user = get_tomcat_user(system)
     # package_name = get_package_name(system)
-    unzip_info = commands.getstatusoutput("unzip {}/zipfiles/{} -d {}/webapps".format(app_root, filename, tomcat_root))
+    unzip_info = commands.getstatusoutput(
+        "sudo -u {} unzip {}/wars/zipfiles/{} -d {}/webapps".format(tomcat_user, app_root, filename, tomcat_root))
     print unzip_info
     return unzip_info
 
