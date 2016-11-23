@@ -21,8 +21,6 @@ manager_host = '10.1.2.49'
 app_root = "/opt/scm-manager"
 package_root = "/opt/scm-manager/wars"
 
-
-
 cscm_user = "cscm"
 iscm_user = "iscm"
 scm_user = "scm"
@@ -77,7 +75,7 @@ def BuildJob(n):
 
 
 @handler.register
-def DoCmd(operate, node_info):
+def DoCmd(operate, node_info, is_quartz):
     print "cmd is  %s" % operate
     (system, ver) = re.split("-", node_info)
     tomcat_port = "28080" if re.match('cnshipping', system) else "8080"
@@ -100,17 +98,25 @@ def DoCmd(operate, node_info):
                 time.sleep(1)
             else:
                 con = True
+        return status
     elif operate == "update":
-        command = "rm -fr {}/work/*; rm -fr {}/webapps/{}*; cp -a {}/{}/*.war {}/webapps/{}".format(tomcat_root,
-                                                                                                    tomcat_root,
-                                                                                                    get_package_prefix(
-                                                                                                        system),
-                                                                                                    package_root,
-                                                                                                    node_info,
-                                                                                                    tomcat_root,
-                                                                                                    package_name)
-        time.sleep(2)
-        status = commands.getstatusoutput(command)
+        copy_command = "rm -fr {}/work/*; rm -fr {}/webapps/{}*; cp -a {}/{}/*.war {}/webapps/{}".format(tomcat_root,
+                                                                                                         tomcat_root,
+                                                                                                         get_package_prefix(
+                                                                                                             system),
+                                                                                                         package_root,
+                                                                                                         node_info,
+                                                                                                         tomcat_root,
+                                                                                                         package_name)
+        unzip_command = "su - {} -c unzip {}/webapps/{} -d {}/webapps/{}".format(tomcat_user, tomcat_root, package_name,
+                                                                                 tomcat_root,
+                                                                                 get_package_prefix(system))
+        subprocess.call(copy_command, shell=True)
+        status = subprocess.call(unzip_command, shell=True)
+        if not is_quartz:
+            del_quartz_config = "rm -f {}/webapps/{}/WEB-INF/classes/schedule/*.xml"
+            status = subprocess.call(del_quartz_config, shell=True)
+        return [status, "nothing"]
     else:
         pid = \
             commands.getstatusoutput(
@@ -121,7 +127,7 @@ def DoCmd(operate, node_info):
             print "start to kill %s" % pid
             print status
         time.sleep(2)
-    return status
+        return status
 
 
 @handler.register
@@ -178,6 +184,7 @@ def UpdateZipFile(filename, system):
     # 解压缩到webapps目录 要求zip包解压后是项目名称开头的文件树
     tomcat_root = get_tomcat_root(system)
     tomcat_user = get_tomcat_user(system)
+    unzip_info = ""
     for i in xrange(10):
         if commands.getstatusoutput('ps -ef| grep aria| grep -v grep')[0] == 0:
             time.sleep(1)
@@ -187,7 +194,6 @@ def UpdateZipFile(filename, system):
                                                                                   tomcat_root,
                                                                                   get_package_prefix(system)))
             break
-    print unzip_info
     return unzip_info
 
 
@@ -206,6 +212,8 @@ def get_tomcat_root(system):
         tomcat_root = "/home/scm/instance/cnorder"
     elif re.match('jporder', system):
         tomcat_root = "/home/scm/instance/jporder"
+    else:
+        tomcat_root = ""
     return tomcat_root
 
 
