@@ -21,11 +21,7 @@ manager_host = '10.1.2.49'
 app_root = "/opt/scm-manager"
 package_root = "/opt/scm-manager/wars"
 
-tomcat_root_default = "/opt/tomcat/"
-tomcat_root_7 = "/home/scm/apache-tomcat-7.0.39"
-tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
-tomcat_root_cscm = "/home/cscm/apache-tomcat-7.0.39"
-tomcat_root_iscm = "/home/iscm/apache-tomcat-7.0.39"
+
 
 cscm_user = "cscm"
 iscm_user = "iscm"
@@ -197,15 +193,19 @@ def UpdateZipFile(filename, system):
 
 def get_tomcat_root(system):
     if re.match('manufacturing', system):
-        tomcat_root = tomcat_root_default
+        tomcat_root = "/home/scm/instance/manufacturing"
     elif re.match('material', system):
-        tomcat_root = tomcat_root_default
+        tomcat_root = "/home/scm/instance/material"
     elif re.match('cnshipping', system):
-        tomcat_root = tomcat_root_default
+        tomcat_root = "/home/scm/instance/cnshipping"
     elif re.match('usshipping', system):
-        tomcat_root = tomcat_root_default
-    else:
-        tomcat_root = tomcat_root_default
+        tomcat_root = "/home/scm/instance/usshipping"
+    elif re.match('usorder', system):
+        tomcat_root = "/home/scm/instance/usorder"
+    elif re.match('cnorder', system):
+        tomcat_root = "/home/scm/instance/cnorder"
+    elif re.match('jporder', system):
+        tomcat_root = "/home/scm/instance/jporder"
     return tomcat_root
 
 
