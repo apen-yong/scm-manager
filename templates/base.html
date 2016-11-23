@@ -22,13 +22,13 @@
 
             <ul class="nav nav-tabs" role="tablist" id="menu">
                 <li class=""><a href="{{ url_for("dashboard.index") }}">首页</a></li>
-                <li ><a href="{{ url_for("dashboard.show", system= "usorder") }}">US Order</a></li>
-                <li class=""><a href="{{ url_for("dashboard.show", system= "cnorder") }}">CN Order</a></li>
-                <li class=""><a href="{{ url_for("dashboard.show", system= "jporder") }}">JP Order</a></li>
+                <li class="disabled"><a href="#">US Order</a></li>
+                <li class="disabled"><a href="#">CN Order</a></li>
+                <li class="disabled"><a href="#">JP Order</a></li>
                 <li class=""><a href="{{ url_for("dashboard.show", system= "usshipping") }}">US/JP Shipping</a></li>
-                <li class=""><a href="{{ url_for("dashboard.show", system="cnshipping") }}">CN Shipping</a></li>
-                <li class=""><a href="{{ url_for("dashboard.show", system="manufacturing") }}">Manufacturing</a></li>
-                <li class=""><a href="{{ url_for("dashboard.show", system="material") }}">Material</a></li>
+                <li class="disabled"><a href="#">CN Shipping</a></li>
+                <li class="disabled"><a href="#">Manufacturing</a></li>
+                <li class="disabled"><a href="#">Material</a></li>
             </ul>
             </div>
         {% endblock %}
