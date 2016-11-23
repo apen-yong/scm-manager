@@ -20,6 +20,8 @@ j = jenkins.Jenkins("http://127.1:8080", 'rpcuser', '2266bcc74441b07e9c50ba468a6
 manager_host = '10.1.2.49'
 app_root = "/opt/scm-manager"
 package_root = "/opt/scm-manager/wars"
+
+tomcat_root_default = "/opt/tomcat/"
 tomcat_root_7 = "/home/scm/apache-tomcat-7.0.39"
 tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
 tomcat_root_cscm = "/home/cscm/apache-tomcat-7.0.39"
@@ -29,6 +31,9 @@ cscm_user = "cscm"
 iscm_user = "iscm"
 scm_user = "scm"
 mes_user = "mes"
+
+cscm_start = "startcscm"
+scm_start = "startscm"
 
 
 @handler.register
@@ -80,11 +85,13 @@ def DoCmd(operate, node_info):
     print "cmd is  %s" % operate
     (system, ver) = re.split("-", node_info)
     tomcat_port = "28080" if re.match('cnshipping', system) else "8080"
+    start_command = cscm_start if re.match("cnshipping", system) else scm_start
     tomcat_root = get_tomcat_root(system)
     tomcat_user = get_tomcat_user(system)
     package_name = get_package_prefix(system) + ".war"
     if operate == "start":
-        command = "su - {} -c {}/bin/startup.sh".format(tomcat_user, tomcat_root)
+        # command = "su - {} -c {}/bin/startup.sh".format(tomcat_user, tomcat_root)
+        command = "su - {} -c {}".format(tomcat_user, start_command)
         child = subprocess.Popen(command, shell=True)
         status = [child.pid, "nothing"]
         con = False
@@ -190,15 +197,15 @@ def UpdateZipFile(filename, system):
 
 def get_tomcat_root(system):
     if re.match('manufacturing', system):
-        tomcat_root = tomcat_root_8
+        tomcat_root = tomcat_root_default
     elif re.match('material', system):
-        tomcat_root = tomcat_root_8
+        tomcat_root = tomcat_root_default
     elif re.match('cnshipping', system):
-        tomcat_root = tomcat_root_cscm
+        tomcat_root = tomcat_root_default
     elif re.match('usshipping', system):
-        tomcat_root = tomcat_root_iscm
+        tomcat_root = tomcat_root_default
     else:
-        tomcat_root = tomcat_root_7
+        tomcat_root = tomcat_root_default
     return tomcat_root
 
 
@@ -214,11 +221,11 @@ def get_package_prefix(system):
 
 def get_tomcat_user(system):
     if re.match("cnshipping", system):
-        user = cscm_user
+        user = scm_user
     elif re.match("usshipping", system):
-        user = iscm_user
+        user = scm_user
     elif re.match("manufacturing|material", system):
-        user = mes_user
+        user = scm_user
     else:
         user = scm_user
     return user
