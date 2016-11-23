@@ -187,7 +187,7 @@ def query_status(name):
 def do_cmd(address, cmd, node_info):
     rpc_url = "http://{}:{}/api".format(address, current_app.config["RPC_PORT"])
     jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
-    if address in current_app.config["quartz_server"]:
+    if address in current_app.config["QUARTZ_SERVER"]:
         is_quartz = True
     else:
         is_quartz = False

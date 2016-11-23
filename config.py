@@ -40,7 +40,7 @@ MATERIAL = {
 }
 
 # 定时任务服务器
-quartz_server = ["10.1.2.56"]
+QUARTZ_SERVER = ["10.1.2.56"]
 
 # 文件上传设置
 UPLOAD_FOLDER = 'upload_files/'
