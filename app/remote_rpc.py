@@ -126,6 +126,8 @@ def DoCmd(operate, node_info, is_quartz):
             status = commands.getstatusoutput(command)
             print "start to kill %s" % pid
             print status
+        else:
+            status = [0, "java is not running"]
         time.sleep(2)
         return status
 
