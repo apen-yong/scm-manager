@@ -187,7 +187,11 @@ def query_status(name):
 def do_cmd(address, cmd, node_info):
     rpc_url = "http://{}:{}/api".format(address, current_app.config["RPC_PORT"])
     jenkins_rpc = xmlrpclib.ServerProxy(rpc_url)
-    data = jenkins_rpc.DoCmd(cmd, node_info)
+    if address in current_app.config["quartz_server"]:
+        is_quartz = True
+    else:
+        is_quartz = False
+    data = jenkins_rpc.DoCmd(cmd, node_info, is_quartz)
     json_obj = '{"code":%s, "info":"%s"}' % (data[0], data[1])
     print json_obj
     return str(json_obj)
