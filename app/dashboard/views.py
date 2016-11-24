@@ -52,6 +52,10 @@ def server_status(system, ver):
         except xmlrpclib.Fault, e:
             print "rpc error: {}".format(e)
             status[h] = {}
+        if h in current_app.config["QUARTZ_SERVER"]:
+            status["is_quartz"] = True
+        else:
+            status["is_quartz"] = False
     return render_template('system_manager.html', current_user=current_user, system=system, status=status, ver=ver)
 
 
