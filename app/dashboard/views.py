@@ -53,9 +53,9 @@ def server_status(system, ver):
             print "rpc error: {}".format(e)
             status[h] = {}
         if h in current_app.config["QUARTZ_SERVER"]:
-            status["is_quartz"] = True
+            status[h]["is_quartz"] = True
         else:
-            status["is_quartz"] = False
+            status[h]["is_quartz"] = False
     return render_template('system_manager.html', current_user=current_user, system=system, status=status, ver=ver)
 
 
