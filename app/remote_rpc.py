@@ -115,8 +115,9 @@ def DoCmd(operate, node_info, is_quartz):
         subprocess.call(copy_command, shell=True)
         status = subprocess.call(unzip_command, shell=True)
         if not is_quartz:
-            del_quartz_config = "rm -f {}/webapps/{}/WEB-INF/classes/schedule/*.xml".format(tomcat_root,
-                                                                                            get_package_prefix(system))
+            del_quartz_config = "sed -i '/ref bean/d' {}/webapps/{}/WEB-INF/classes/schedule/applicationContext-quartz.xml".format(
+                tomcat_root,
+                get_package_prefix(system))
             print del_quartz_config
             status = subprocess.call(del_quartz_config, shell=True)
         return [status, "nothing"]
