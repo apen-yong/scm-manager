@@ -108,9 +108,10 @@ def DoCmd(operate, node_info, is_quartz):
                                                                                                          node_info,
                                                                                                          tomcat_root,
                                                                                                          package_name)
-        unzip_command = "sudo -u {} unzip {}/webapps/{} -d {}/webapps/{}".format(tomcat_user, tomcat_root, package_name,
-                                                                                 tomcat_root,
-                                                                                 get_package_prefix(system))
+        unzip_command = "sudo -u {} unzip -qo {}/webapps/{} -d {}/webapps/{}".format(tomcat_user, tomcat_root,
+                                                                                     package_name,
+                                                                                     tomcat_root,
+                                                                                     get_package_prefix(system))
         subprocess.call(copy_command, shell=True)
         status = subprocess.call(unzip_command, shell=True)
         if not is_quartz:
