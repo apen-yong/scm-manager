@@ -24,6 +24,7 @@ tomcat_root_7 = "/home/scm/apache-tomcat-7.0.39"
 tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
 tomcat_root_cscm = "/home/cscm/apache-tomcat-7.0.39"
 tomcat_root_iscm = "/home/iscm/apache-tomcat-7.0.39"
+version = "1.0.0"
 
 cscm_user = "cscm"
 iscm_user = "iscm"
@@ -153,6 +154,7 @@ def GetProcessInfo(system, ver):
         status['pid'] = pidinfo[1]
         status['uptime'] = commands.getoutput('ps -p %s -o lstart | sed -n \'2p\'' % pidinfo[1])
         status['mem_info'] = commands.getoutput("cat /proc/{}/status  | grep RSS".format(pidinfo[1]))
+        status['ver'] = version
         return status
 
 
