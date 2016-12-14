@@ -76,7 +76,7 @@ def BuildJob(n):
 
 
 @handler.register
-def DoCmd(operate, node_info):
+def DoCmd(operate, node_info, is_quartz):
     print "cmd is  %s" % operate
     (system, ver) = re.split("-", node_info)
     tomcat_port = "28080" if re.match('cnshipping', system) else "8080"
@@ -98,16 +98,24 @@ def DoCmd(operate, node_info):
             else:
                 con = True
     elif operate == "update":
-        command = "rm -fr {}/work/*; rm -fr {}/webapps/{}*; cp -a {}/{}/*.war {}/webapps/{}".format(tomcat_root,
-                                                                                                    tomcat_root,
-                                                                                                    get_package_prefix(
-                                                                                                        system),
-                                                                                                    package_root,
-                                                                                                    node_info,
-                                                                                                    tomcat_root,
-                                                                                                    package_name)
-        time.sleep(2)
-        status = commands.getstatusoutput(command)
+        copy_command = "rm -fr {}/work/*; rm -fr {}/webapps/{}*;" \
+                       " cp -a {}/{}/*.war {}/webapps/{}".format(tomcat_root,
+                                                                 tomcat_root,
+                                                                 get_package_prefix(system),
+                                                                 package_root,
+                                                                 node_info,
+                                                                 tomcat_root,
+                                                                 package_name)
+        unzip_command = "sudo -u {} unzip -qo {}/webapps/{} -d {}/webapps/{}".format(tomcat_user, tomcat_root,
+                                                                                     package_name, tomcat_root,
+                                                                                     get_package_prefix(system))
+        subprocess.call(copy_command, shell=True)
+        status = subprocess.call(unzip_command, shell=True)
+        if not is_quartz:
+            del_quartz_config = "sed -i '/ref bean/d' {}/webapps/{}/WEB-INF/classes/" \
+                                "schedule/applicationContext-quartz.xml".format(tomcat_root, get_package_prefix(system))
+            status = subprocess.call(del_quartz_config, shell=True)
+        return [status, "nothing"]
     else:
         pid = \
             commands.getstatusoutput(
@@ -117,6 +125,8 @@ def DoCmd(operate, node_info):
             status = commands.getstatusoutput(command)
             print "start to kill %s" % pid
             print status
+        else:
+            status = [0, "java is not running"]
         time.sleep(2)
     return status
 
