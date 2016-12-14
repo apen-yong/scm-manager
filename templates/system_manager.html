@@ -125,20 +125,17 @@
                         <td>执行命令</td>
                         <td>
                             <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
-                                    server="{{ k }}">关闭
-                            </button>
+                                    server="{{ k }}" cmd="stop">关闭</button>
                             {% if v.get("aria_status", None)[0] == 0 %}
                                 <button class="btn btn-danger btn-xs disabled"
                                         server="{{ k }}">等待下载
                                 </button>
                             {% else %}
                                 <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
-                                        server="{{ k }}">更新
-                                </button>
+                                        server="{{ k }}" cmd="update">更新</button>
                             {% endif %}
                             <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
-                                    server="{{ k }}">启动
-                            </button>
+                                    server="{{ k }}" cmd="start">启动</button>
 
                         </td>
                     </tr>

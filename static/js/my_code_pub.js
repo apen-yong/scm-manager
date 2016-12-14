@@ -61,7 +61,7 @@ $('#console').on('show.bs.modal', function (event) {
 
 $(".btn-xs").click(
     function () {
-        var bt = $(this).text();
+        var bt = $(this).attr("cmd");
         // $(this).button("loading")
         var server = $(this).attr("server")
         $("#which_button").text(bt)
@@ -181,16 +181,16 @@ function do_cmd() {
     var node_info = $("#node_info").attr('value')
     $("#submit").button("loading")
     // alert(node_info)
-    if (info == "启动") {
-        var cmd = "start";
-    }
-    else if (info == "更新") {
-        var cmd = "update";
-    }
-    else {
-        var cmd = "stop"
-    }
-    $.get("/cmd/" + host + "/" +cmd + "/" + node_info,
+    // if (info == "启动") {
+    //     var cmd = "start";
+    // }
+    // else if (info == "更新") {
+    //     var cmd = "update";
+    // }
+    // else {
+    //     var cmd = "stop"
+    // }
+    $.get("/cmd/" + host + "/" + info + "/" + node_info,
         function (data, status) {
             obj = JSON.parse(data);
             if (obj['code'] == 0) {
