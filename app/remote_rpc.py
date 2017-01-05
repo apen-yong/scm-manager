@@ -213,7 +213,7 @@ def UpdateZipFile(filename, system):
 def get_release_info():
     file_path = "{}/release/".format(package_root)
     release = {}
-    for f in subprocess.check_output("ls -l {}".format(file_path)).split("\n"):
+    for f in subprocess.check_output("ls -l {}".format(file_path), shell=True).split("\n"):
         split_info = f.split("\s+")
         try:
             release["data"].append(split_info)
