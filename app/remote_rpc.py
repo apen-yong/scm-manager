@@ -214,10 +214,10 @@ def SwitchRelease(release, node_info):
         select_release = "{}/release-{}/{}".format(package_root, node_info, release)
         current_release = " {}/{}/*.war".format(package_root, node_info)
         cmd = "rm -f {}; cp -p {} {}/{}/".format(current_release, select_release, package_root, node_info)
-        subprocess.call(cmd, shell=True)
+        status = subprocess.call(cmd, shell=True)
     except Exception, e:
-        return False
-    return True
+        status = 1
+    return status
 
 
 def get_release_info(system, ver):
