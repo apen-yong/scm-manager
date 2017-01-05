@@ -24,12 +24,14 @@ tomcat_root_7 = "/home/scm/apache-tomcat-7.0.39"
 tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
 tomcat_root_cscm = "/home/cscm/apache-tomcat-7.0.39"
 tomcat_root_iscm = "/home/iscm/apache-tomcat-7.0.39"
-version = "1.0.0"
+tomcat_root_jco = "/var/lib/apache-tomcat-7.0.64"
+version = "1.0.2"
 
 cscm_user = "cscm"
 iscm_user = "iscm"
 scm_user = "scm"
 mes_user = "mes"
+jco_user = "root"
 
 
 @handler.register
@@ -100,17 +102,21 @@ def DoCmd(operate, node_info, is_quartz):
                 con = True
     elif operate == "update":
         copy_command = "rm -fr {}/work/*; rm -fr {}/webapps/{}*;" \
-                       " cp -a {}/{}/*.war {}/webapps/{}".format(tomcat_root,
-                                                                 tomcat_root,
-                                                                 get_package_prefix(system),
-                                                                 package_root,
-                                                                 node_info,
-                                                                 tomcat_root,
-                                                                 package_name)
+                       " cp -ap {}/{}/*.war {}/webapps/{}".format(tomcat_root,
+                                                                  tomcat_root,
+                                                                  get_package_prefix(system),
+                                                                  package_root,
+                                                                  node_info,
+                                                                  tomcat_root,
+                                                                  package_name)
+        copy_release = "cp -ap {}/{}/*.war {}/release/".format(package_root, node_info, package_root)
         unzip_command = "sudo -u {} unzip -qo {}/webapps/{} -d {}/webapps/{}".format(tomcat_user, tomcat_root,
                                                                                      package_name, tomcat_root,
                                                                                      get_package_prefix(system))
+        if not os.path.exists("{}/release/".format(package_root)):
+            os.mkdir("{}/release/".format(package_root))
         subprocess.call(copy_command, shell=True)
+        subprocess.call(copy_release, shell=True)
         status = subprocess.call(unzip_command, shell=True)
         if not is_quartz:
             del_quartz_config = "sed -i '/ref bean/d' {}/webapps/{}/WEB-INF/classes/" \
@@ -158,6 +164,7 @@ def GetProcessInfo(system, ver):
         status['uptime'] = commands.getoutput('ps -p %s -o lstart | sed -n \'2p\'' % pidinfo[1])
         status['mem_info'] = commands.getoutput("cat /proc/{}/status  | grep RSS".format(pidinfo[1]))
         status['ver'] = version
+        status['release'] = get_release_info()
         return status
 
 
@@ -203,6 +210,18 @@ def UpdateZipFile(filename, system):
     return unzip_info
 
 
+def get_release_info():
+    file_path = "{}/release/".format(package_root)
+    release = {}
+    for f in subprocess.check_output("ls -l {}".format(file_path)).split("\n"):
+        split_info = f.split("\s+")
+        try:
+            release["data"].append(split_info)
+        except KeyError:
+            release["data"] = [split_info]
+    return release["data"]
+
+
 def get_tomcat_root(system):
     if re.match('manufacturing', system):
         tomcat_root = tomcat_root_8
@@ -212,6 +231,8 @@ def get_tomcat_root(system):
         tomcat_root = tomcat_root_cscm
     elif re.match('usshipping', system):
         tomcat_root = tomcat_root_iscm
+    elif re.match("jco", system):
+        tomcat_root = tomcat_root_jco
     else:
         tomcat_root = tomcat_root_7
     return tomcat_root
@@ -222,6 +243,8 @@ def get_package_prefix(system):
         package_prefix = "mes.{}".format(system)
     elif re.match('material', system):
         package_prefix = system
+    elif re.match('jco', system):
+        package_prefix = "SAPJCOLayers"
     else:
         package_prefix = "scm"
     return package_prefix
@@ -232,6 +255,8 @@ def get_tomcat_user(system):
         user = cscm_user
     elif re.match("usshipping", system):
         user = iscm_user
+    elif re.match("jco", system):
+        user = jco_user
     elif re.match("manufacturing|material", system):
         user = mes_user
     else:
