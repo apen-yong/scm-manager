@@ -58,6 +58,14 @@ $('#console').on('show.bs.modal', function (event) {
 
 });
 
+$('#switch_release').on('show.bs.modal', function (event) {
+    var button =  $(event.relatedTarget);
+    var div_id = "release_" + button.data('server').replace(/\./g, "\\.")
+    var display_table = $('#' + div_id).html()
+    console.log(div_id)
+    $('#switch_release_body').empty().append(display_table)
+    }
+)
 
 $(".btn-xs").click(
     function () {
@@ -112,6 +120,8 @@ $("#submit_to_qa").click(
 
     }
 );
+
+
 
 $("#pass_projectid > li").click(
     function () {
@@ -229,6 +239,13 @@ $("#close_res").click(
         location.reload()
     }
 );
+
+function switch_release() {
+    var release = $("input[type='radio'][name='selected_release']:checked").val()
+    var server = $("input[type='radio'][name='selected_release']:checked").attr('server')
+    console.log("checked version is:" + release + server)
+
+}
 
 function menuselect() {
     var my_location = location.href;

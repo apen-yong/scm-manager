@@ -25,7 +25,7 @@ tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
 tomcat_root_cscm = "/home/cscm/apache-tomcat-7.0.39"
 tomcat_root_iscm = "/home/iscm/apache-tomcat-7.0.39"
 tomcat_root_jco = "/var/lib/apache-tomcat-7.0.64"
-version = "1.0.2"
+version = "1.0.3"
 
 cscm_user = "cscm"
 iscm_user = "iscm"
@@ -162,7 +162,7 @@ def GetProcessInfo(system, ver):
         status['uptime'] = commands.getoutput('ps -p %s -o lstart | sed -n \'2p\'' % pidinfo[1])
         status['mem_info'] = commands.getoutput("cat /proc/{}/status  | grep RSS".format(pidinfo[1]))
         status['ver'] = version
-        status['release'] = get_release_info()
+        status['release'] = get_release_info(system, ver)
         return status
 
 
@@ -208,11 +208,23 @@ def UpdateZipFile(filename, system):
     return unzip_info
 
 
-def get_release_info():
-    file_path = "{}/release/".format(package_root)
+@handler.register
+def SwitchRelease(release, node_info):
+    try:
+        select_release = "{}/release-{}/{}".format(package_root, node_info, release)
+        current_release = " {}/{}/*.war".format(package_root, node_info)
+        cmd = "rm -f {}; cp -p {} {}/{}/".format(current_release, select_release, package_root, node_info)
+        subprocess.call(cmd, shell=True)
+    except Exception, e:
+        return False
+    return True
+
+
+def get_release_info(system, ver):
+    file_path = "{}/release-{}-{}/".format(package_root, system, ver)
     release = {}
-    if not os.path.exists("{}/release/".format(package_root)):
-        os.mkdir("{}/release/".format(package_root))
+    if not os.path.exists(file_path):
+        os.mkdir(file_path)
     for f in subprocess.check_output("ls -l {}".format(file_path), shell=True).split("\n"):
         split_info = re.split("\s+", f)
         if len(split_info) < 7:

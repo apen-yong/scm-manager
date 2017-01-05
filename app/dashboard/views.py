@@ -250,6 +250,21 @@ def get_console():
     return human_readable_log
 
 
+@dashboard.route('/api/switch_release')
+def switch_release():
+    release = request.args.get('release')
+    server = request.args.get('server')
+    node_info = request.args.get('node_info')
+    rpc_url = "http://{}:{}/api".format(server, current_app.config["RPC_PORT"])
+    try:
+        remote_rpc = xmlrpclib.ServerProxy(rpc_url)
+        remote_rpc.switch_release(release, node_info)
+    except socket.error, e:
+        print "connect rpc server error:{}".format(e)
+        return "Error: {}".format(e)
+    return "Success to switch release"
+
+
 def get_package_prefix(system):
     if re.match('manufacturing', system):
         package_prefix = "mes.{}".format(system)

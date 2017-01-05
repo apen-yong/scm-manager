@@ -124,31 +124,35 @@
                     <tr>
                         <td>执行命令</td>
                         <td>
-                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
-                                    server="{{ k }}" cmd="stop">关闭
-                            </button>
-                            {% if v.get("aria_status", None)[0] == 0 %}
-                                <button class="btn btn-danger btn-xs disabled"
-                                        server="{{ k }}">等待下载
-                                </button>
-                            {% else %}
+                            <div>
                                 <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
-                                        server="{{ k }}" cmd="update">更新
+                                        server="{{ k }}" cmd="stop">关闭
                                 </button>
-                            {% endif %}
-                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
-                                    server="{{ k }}" cmd="start">启动
-                            </button>
-                            <p></p>
-                            <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#switchrelease"
-                                    server="{{ k }}" cmd="start">选择版本
-                            </button>
+                                {% if v.get("aria_status", None)[0] == 0 %}
+                                    <button class="btn btn-danger btn-xs disabled"
+                                            server="{{ k }}">等待下载
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
+                                            server="{{ k }}" cmd="update">更新
+                                    </button>
+                                {% endif %}
+                                <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myconfirm"
+                                        server="{{ k }}" cmd="start">启动
+                                </button>
+                            </div>
+                            <div style="margin-top: 4px">
+                                <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#switch_release"
+                                        data-server={{ k }}>选择版本
+                                </button>
+                            </div>
 
                         </td>
                     </tr>
                 </table>
                 <div class="hidden" id="release_{{ k }}">
-                    <table class="table table-striped table-hove table-condensed" role="table" style="font-size:8pt">
+                    <table class="table table-striped table-hove table-condensed" role="table" style="font-size:8pt"
+                           width="100">
                         <tr>
                             <th>文件名</th>
                             <th>打包时间</th>
@@ -157,9 +161,10 @@
                         </tr>
                         {% for i in v.get("release") %}
                             <tr>
-                                <td>i[8]</td>
-                                <td>i[5] i[6]-i[7]</td>
-                                <td>i[4]</td>
+                                <td>{{ i[8] }}</td>
+                                <td>{{ i[5] }} {{ i[6] }} {{ i[7] }}</td>
+                                <td>{{ i[4] }} bytes</td>
+                                <td><input type="radio" name="selected_release" server="{{ k }}" value="{{ i[8] }}"></td>
                             </tr>
                         {% endfor %}
                     </table>
@@ -202,7 +207,7 @@
             </div>
 
             <!-- 模态框（Modal） -->
-            <div class="modal fade" id="switchrelease" tabindex="-1" role="dialog"
+            <div class="modal fade" id="switch_release" tabindex="-1" role="dialog"
                  aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -215,7 +220,7 @@
                                 选择需要回滚的版本
                             </h4>
                         </div>
-                        <div class="switchrelease-body">
+                        <div id="switch_release_body">
 
                         </div>
                         <div class="modal-footer">
@@ -223,7 +228,7 @@
                                     data-dismiss="modal">取消
                             </button>
                             <button type="button" class="btn btn-primary" id="submit" data-loading-text="Loading..."
-                                    autocomplete="off" onclick="switchrelease()">
+                                    autocomplete="off" onclick="switch_release()">
                                 选择
                             </button>
                         </div>
