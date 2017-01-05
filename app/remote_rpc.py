@@ -233,6 +233,8 @@ def get_release_info(system, ver):
             release["data"].append(split_info)
         except KeyError:
             release["data"] = [split_info]
+    if len(release['data']) == 0:
+        release['data'] = []
     return release["data"]
 
 
