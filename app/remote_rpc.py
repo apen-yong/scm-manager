@@ -113,8 +113,6 @@ def DoCmd(operate, node_info, is_quartz):
         unzip_command = "sudo -u {} unzip -qo {}/webapps/{} -d {}/webapps/{}".format(tomcat_user, tomcat_root,
                                                                                      package_name, tomcat_root,
                                                                                      get_package_prefix(system))
-        if not os.path.exists("{}/release/".format(package_root)):
-            os.mkdir("{}/release/".format(package_root))
         subprocess.call(copy_command, shell=True)
         subprocess.call(copy_release, shell=True)
         status = subprocess.call(unzip_command, shell=True)
@@ -213,8 +211,12 @@ def UpdateZipFile(filename, system):
 def get_release_info():
     file_path = "{}/release/".format(package_root)
     release = {}
+    if not os.path.exists("{}/release/".format(package_root)):
+        os.mkdir("{}/release/".format(package_root))
     for f in subprocess.check_output("ls -l {}".format(file_path), shell=True).split("\n"):
-        split_info = f.split("\s+")
+        split_info = re.split("\s+", f)
+        if len(split_info) < 7:
+            continue
         try:
             release["data"].append(split_info)
         except KeyError:
