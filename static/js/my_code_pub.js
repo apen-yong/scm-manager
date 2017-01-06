@@ -241,9 +241,17 @@ $("#close_res").click(
 );
 
 function switch_release() {
-    var release = $("input[type='radio'][name='selected_release']:checked").val()
-    var server = $("input[type='radio'][name='selected_release']:checked").attr('server')
-    console.log("checked version is:" + release + server)
+    var radio = $("input[type='radio'][name='selected_release']:checked")
+    var release = radio.val()
+    var server = radio.attr('server')
+    var node_info = $('#node_info').attr('value')
+    $('#submit_switch').button("loading")
+    console.log("checked version is:" + release + server + node_info)
+    $.get("/api/switch_release?release=" + release + "&server=" + server + "&node_info=" + node_info, function (data, status) {
+        if (status = "success") {
+            location.reload()
+        }
+    })
 
 }
 
@@ -263,5 +271,5 @@ function menuselect() {
         }
     })
 
-    
+
 }

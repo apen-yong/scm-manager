@@ -225,10 +225,14 @@ def get_release_info(system, ver):
     release = {}
     if not os.path.exists(file_path):
         os.mkdir(file_path)
-    for f in subprocess.check_output("ls -l {}".format(file_path), shell=True).split("\n"):
+    for f in subprocess.check_output("ls -t -l --time-style=+%Y%m%d-%H:%M --block-size=M {}".format(file_path), shell=True).split("\n"):
         split_info = re.split("\s+", f)
         if len(split_info) < 7:
+            # 如果是目录就跳过去
             continue
+        if len(release["data"]) >= 10:
+            # 如果获取的文件超过10个 就退出循环
+            break
         try:
             release["data"].append(split_info)
         except KeyError:

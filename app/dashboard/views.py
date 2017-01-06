@@ -256,13 +256,14 @@ def switch_release():
     server = request.args.get('server')
     node_info = request.args.get('node_info')
     rpc_url = "http://{}:{}/api".format(server, current_app.config["RPC_PORT"])
+    print rpc_url, release, node_info
     try:
         remote_rpc = xmlrpclib.ServerProxy(rpc_url)
-        remote_rpc.switch_release(release, node_info)
+        remote_rpc.SwitchRelease(release, node_info)
     except socket.error, e:
         print "connect rpc server error:{}".format(e)
         return "Error: {}".format(e)
-    return "Success to switch release"
+    return "success"
 
 
 def get_package_prefix(system):
