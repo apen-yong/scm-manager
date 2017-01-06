@@ -155,14 +155,14 @@ def GetProcessInfo(system, ver):
         'stat  {}/{}-{}/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(package_root, system,
                                                                                              ver))
     status['load_info'] = commands.getoutput(' w |grep \'load\' | cut -d , -f 4,5,6')
+    status['release'] = get_release_info(system, ver)
+    status['ver'] = version
     if pidinfo[1] == "":
         return status
     else:
         status['pid'] = pidinfo[1]
         status['uptime'] = commands.getoutput('ps -p %s -o lstart | sed -n \'2p\'' % pidinfo[1])
         status['mem_info'] = commands.getoutput("cat /proc/{}/status  | grep RSS".format(pidinfo[1]))
-        status['ver'] = version
-        status['release'] = get_release_info(system, ver)
         return status
 
 

@@ -159,14 +159,17 @@
                             <th>文件大小</th>
                             <th>选择</th>
                         </tr>
-                        {% for i in v.get("release") %}
-                            <tr>
-                                <td>{{ i[6] }}</td>
-                                <td>{{ i[5] }}</td>
-                                <td>{{ i[4] }}bytes</td>
-                                <td><input type="radio" name="selected_release" server="{{ k }}" value="{{ i[6] }}"></td>
-                            </tr>
-                        {% endfor %}
+                        {% if  v.get("release", False) %}
+                            {% for i in v.get("release") %}
+                                <tr>
+                                    <td>{{ i[6] }}</td>
+                                    <td>{{ i[5] }}</td>
+                                    <td>{{ i[4] }}bytes</td>
+                                    <td><input type="radio" name="selected_release" server="{{ k }}" value="{{ i[6] }}">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
                     </table>
                 </div>
             </div>
@@ -227,7 +230,8 @@
                             <button type="button" class="btn btn-default"
                                     data-dismiss="modal">取消
                             </button>
-                            <button type="button" class="btn btn-primary" id="submit_switch" data-loading-text="Loading..."
+                            <button type="button" class="btn btn-primary" id="submit_switch"
+                                    data-loading-text="Loading..."
                                     autocomplete="off" onclick="switch_release()">
                                 选择
                             </button>
