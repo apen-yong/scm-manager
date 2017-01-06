@@ -230,13 +230,13 @@ def get_release_info(system, ver):
         if len(split_info) < 7:
             # 如果是目录就跳过去
             continue
-        if len(release["data"]) >= 10:
-            # 如果获取的文件超过10个 就退出循环
-            break
         try:
             release["data"].append(split_info)
         except KeyError:
             release["data"] = [split_info]
+        if len(release["data"]) >= 10:
+            # 如果获取的文件超过10个 就退出循环
+            break
     if not release.has_key("data"):
         release['data'] = []
     return release["data"]
