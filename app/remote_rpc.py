@@ -120,7 +120,7 @@ def DoCmd(operate, node_info, is_quartz):
             del_quartz_config = "sed -i '/ref bean/d' {}/webapps/{}/WEB-INF/classes/" \
                                 "schedule/applicationContext-quartz.xml".format(tomcat_root, get_package_prefix(system))
             status = subprocess.call(del_quartz_config, shell=True)
-        if system == "material":
+        if system == "manufacturing":
             chmod_cmd = "chmod 755 /home/mes/apache-tomcat-8.0.24/webapps/mes.manufacturing/WEB-INF/cgi/*"
             subprocess.call(chmod_cmd, shell=True)
         return [status, "nothing"]
