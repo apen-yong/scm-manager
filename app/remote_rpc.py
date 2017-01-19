@@ -25,6 +25,7 @@ tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
 tomcat_root_cscm = "/home/cscm/apache-tomcat-7.0.39"
 tomcat_root_iscm = "/home/iscm/apache-tomcat-7.0.39"
 tomcat_root_jco = "/var/lib/apache-tomcat-7.0.64"
+tomcat_root_fedex = "/home/scm/instance/fedex"
 version = "1.0.3"
 
 cscm_user = "cscm"
@@ -87,7 +88,10 @@ def DoCmd(operate, node_info, is_quartz):
     tomcat_user = get_tomcat_user(system)
     package_name = get_package_prefix(system) + ".war"
     if operate == "start":
-        command = "su - {} -c {}/bin/startup.sh".format(tomcat_user, tomcat_root)
+        if system == "fedex_client":
+            command = "sudo -u {} startscm".format(tomcat_user)
+        else:
+            command = "su - {} -c {}/bin/startup.sh".format(tomcat_user, tomcat_root)
         child = subprocess.Popen(command, shell=True)
         status = [child.pid, "nothing"]
         con = False
@@ -253,6 +257,8 @@ def get_tomcat_root(system):
         tomcat_root = tomcat_root_iscm
     elif re.match("jco", system):
         tomcat_root = tomcat_root_jco
+    elif re.match("fedex_client", system):
+        tomcat_root = tomcat_root_fedex
     else:
         tomcat_root = tomcat_root_7
     return tomcat_root
@@ -265,6 +271,8 @@ def get_package_prefix(system):
         package_prefix = system
     elif re.match('jco', system):
         package_prefix = "SAPJCOLayers"
+    elif re.match('fedex_client', system):
+        package_prefix = "usshippingclient"
     else:
         package_prefix = "scm"
     return package_prefix
@@ -284,4 +292,4 @@ def get_tomcat_user(system):
     return user
 
 
-app.run('0.0.0.0', port=8085, use_reloader=True)
+app.run('0.0.0.0', port=8085, use_reloader=True, debug=True)
