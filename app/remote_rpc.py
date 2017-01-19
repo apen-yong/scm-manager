@@ -89,7 +89,7 @@ def DoCmd(operate, node_info, is_quartz):
     package_name = get_package_prefix(system) + ".war"
     if operate == "start":
         if system == "fedexClient":
-            command = "sudo -u {} startscm".format(tomcat_user)
+            command = "su - {} -c startscm".format(tomcat_user)
         else:
             command = "su - {} -c {}/bin/startup.sh".format(tomcat_user, tomcat_root)
         child = subprocess.Popen(command, shell=True)
@@ -113,7 +113,7 @@ def DoCmd(operate, node_info, is_quartz):
                                                                   node_info,
                                                                   tomcat_root,
                                                                   package_name)
-        copy_release = "cp -ap {}/{}/*.war {}/release/".format(package_root, node_info, package_root)
+        copy_release = "cp -ap {}/{}/*.war {}/release-{}/".format(package_root, node_info, package_root, node_info)
         unzip_command = "sudo -u {} unzip -qo {}/webapps/{} -d {}/webapps/{}".format(tomcat_user, tomcat_root,
                                                                                      package_name, tomcat_root,
                                                                                      get_package_prefix(system))
