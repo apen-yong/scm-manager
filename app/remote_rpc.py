@@ -88,7 +88,7 @@ def DoCmd(operate, node_info, is_quartz):
     tomcat_user = get_tomcat_user(system)
     package_name = get_package_prefix(system) + ".war"
     if operate == "start":
-        if system == "fedex_client":
+        if system == "fedexClient":
             command = "sudo -u {} startscm".format(tomcat_user)
         else:
             command = "su - {} -c {}/bin/startup.sh".format(tomcat_user, tomcat_root)
@@ -257,7 +257,7 @@ def get_tomcat_root(system):
         tomcat_root = tomcat_root_iscm
     elif re.match("jco", system):
         tomcat_root = tomcat_root_jco
-    elif re.match("fedex_client", system):
+    elif re.match("fedexClient", system):
         tomcat_root = tomcat_root_fedex
     else:
         tomcat_root = tomcat_root_7
@@ -271,7 +271,7 @@ def get_package_prefix(system):
         package_prefix = system
     elif re.match('jco', system):
         package_prefix = "SAPJCOLayers"
-    elif re.match('fedex_client', system):
+    elif re.match('fedexClient', system):
         package_prefix = "usshippingclient"
     else:
         package_prefix = "scm"
