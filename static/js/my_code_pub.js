@@ -74,6 +74,9 @@ $(".btn-xs").click(
         var server = $(this).attr("server")
         $("#which_button").text(bt)
         $("#which_server").text(server)
+        if (bt != "stop") {
+            $("#confirm_prompt").hide()
+        }
     }
 );
 
@@ -191,11 +194,13 @@ function do_cmd() {
     var node_info = $("#node_info").attr('value')
     var user_input = $("#user_input").val();
     console.log("user input is:" + user_input)
-    if (user_input == host) {
-        console.log("ipaddress is confirmed!")
-    }else {
-        alert("请输入正确的IP地址！")
-        return
+    if (info == "stop") {
+        if (user_input == host) {
+            console.log("ipaddress is confirmed!")
+        } else {
+            alert("请输入正确的IP地址！")
+            return
+        }
     }
     $("#submit").button("loading")
     $.get("/cmd/" + host + "/" + info + "/" + node_info,

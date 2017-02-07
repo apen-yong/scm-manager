@@ -1,7 +1,7 @@
 {% extends "system.html" %}
 {% block title %} 系统管理 {% endblock %}
 {% block content %}
-    <script xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+    <script xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
         function get_confirm(b) {
             var cmd = $$('#cmd').text();
             var $$btn = $$('#submit').button('loading');
@@ -192,10 +192,22 @@
                             </h4>
                         </div>
                             {% if ver == "test" %}
-                                <div class="input-group input-group-sm modal-body">
-                                    确认后将会对<b id="which_server" class="label-danger"></b>进行<b id="which_button"></b>操作，请确认！</br>
-                                  输入上方红色内容，进行确认操作：<input type="text" class="form-control"   aria-describedby="basic-addon2" id="user_input">
+                                <div class="modal-body">
+                                <div class="row" >
+                                <div class="col-lg-6 col-lg-offset-3">
+                                    确认后将会对<b id="which_server" class="label-danger"></b>进行<b id="which_button"></b>操作!
+                                    </div>
+                                    </div>
+
+                                <div class="row" id="confirm_prompt">
+                                <div class="col-lg-6 col-lg-offset-3 ">
+                                    请在下方输入文本中红色验证码！
+                                <div class="input-group input-group-sm"  >
+                                    <span class="input-group-addon input-group-sm" id="basic-addon3">验证码：</span>
+                                    <input type="text" class="form-control"   aria-describedby="basic-addon2" id="user_input">
+                                </div></div></div>
                                 </div>
+
                             {% else %}
                                 <div class="modal-body">
                                     确认后将会对<b id="which_server" class="label-danger"></b>进行<b id="which_button"></b>操作，请确认！
