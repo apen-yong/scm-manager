@@ -196,7 +196,7 @@ function do_cmd() {
     console.log("user input is:" + user_input)
     if (info == "stop") {
         if (user_input == host) {
-            console.log("ipaddress is confirmed!")
+            console.log("ip address is confirmed!")
         } else {
             alert("请输入正确的IP地址！")
             return

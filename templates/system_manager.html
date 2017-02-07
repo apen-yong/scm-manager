@@ -191,19 +191,18 @@
                                 确认操作吗？
                             </h4>
                         </div>
-                            {% if ver == "test" %}
+                            {% if ver == "prod" %}
                                 <div class="modal-body">
                                 <div class="row" >
                                 <div class="col-lg-6 col-lg-offset-3">
-                                    确认后将会对<b id="which_server" class="label-danger"></b>进行<b id="which_button"></b>操作!
+                                    确认后将会对<b id="which_server" class="label-danger"></b>进行<b id="which_button"></b>操作!  请确认后再操作。
                                     </div>
                                     </div>
 
                                 <div class="row" id="confirm_prompt">
                                 <div class="col-lg-6 col-lg-offset-3 ">
-                                    请在下方输入文本中红色验证码！
                                 <div class="input-group input-group-sm"  >
-                                    <span class="input-group-addon input-group-sm" id="basic-addon3">验证码：</span>
+                                    <span class="input-group-addon input-group-sm" id="basic-addon3">要关闭的服务器IP：</span>
                                     <input type="text" class="form-control"   aria-describedby="basic-addon2" id="user_input">
                                 </div></div></div>
                                 </div>
