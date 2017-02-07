@@ -1,7 +1,7 @@
 {% extends "system.html" %}
 {% block title %} 系统管理 {% endblock %}
 {% block content %}
-    <script xmlns="http://www.w3.org/1999/html">
+    <script xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
         function get_confirm(b) {
             var cmd = $$('#cmd').text();
             var $$btn = $$('#submit').button('loading');
@@ -191,9 +191,17 @@
                                 确认操作吗？
                             </h4>
                         </div>
-                        <div class="modal-body">
-                            确认后将会对<b id="which_server"></b>进行<b id="which_button"></b>操作，请确认！
-                        </div>
+                            {% if ver == "test" %}
+                                <div class="input-group input-group-sm modal-body">
+                                    确认后将会对<b id="which_server" class="label-danger"></b>进行<b id="which_button"></b>操作，请确认！</br>
+                                  输入上方红色内容，进行确认操作：<input type="text" class="form-control"   aria-describedby="basic-addon2" id="user_input">
+                                </div>
+                            {% else %}
+                                <div class="modal-body">
+                                    确认后将会对<b id="which_server" class="label-danger"></b>进行<b id="which_button"></b>操作，请确认！
+                                </div>
+                            {% endif %}
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default"
                                     data-dismiss="modal">关闭

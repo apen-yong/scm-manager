@@ -189,17 +189,15 @@ function do_cmd() {
     var info = $("#which_button").text();
     var host = $("#which_server").text();
     var node_info = $("#node_info").attr('value')
+    var user_input = $("#user_input").text();
+    console.log("user input is:" + user_input)
+    if (user_input == host) {
+        console.log("ipaddress is confirmed!")
+    }else {
+        alert("请输入正确的IP地址！")
+        return
+    }
     $("#submit").button("loading")
-    // alert(node_info)
-    // if (info == "启动") {
-    //     var cmd = "start";
-    // }
-    // else if (info == "更新") {
-    //     var cmd = "update";
-    // }
-    // else {
-    //     var cmd = "stop"
-    // }
     $.get("/cmd/" + host + "/" + info + "/" + node_info,
         function (data, status) {
             obj = JSON.parse(data);
