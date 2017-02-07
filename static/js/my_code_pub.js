@@ -189,7 +189,7 @@ function do_cmd() {
     var info = $("#which_button").text();
     var host = $("#which_server").text();
     var node_info = $("#node_info").attr('value')
-    var user_input = $("#user_input").text();
+    var user_input = $("#user_input").val();
     console.log("user input is:" + user_input)
     if (user_input == host) {
         console.log("ipaddress is confirmed!")
