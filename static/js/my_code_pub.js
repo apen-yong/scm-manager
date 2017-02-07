@@ -190,11 +190,13 @@ $("#p_list input").click(
 
 function do_cmd() {
     var info = $("#which_button").text();
-    var host = $("#which_server").text();
+    var server = $("#which_server");
+    var host = server.text();
+    var ver = server.attr('ver');
     var node_info = $("#node_info").attr('value')
     var user_input = $("#user_input").val();
     console.log("user input is:" + user_input)
-    if (info == "stop") {
+    if (info == "stop" && ver == "prod") {
         if (user_input == host) {
             console.log("ip address is confirmed!")
         } else {
