@@ -14,10 +14,26 @@ import re
 import subprocess
 
 app = Flask(__name__)
-app.config.from_pyfile("../config.py")
 handler = XMLRPCHandler('api')
 handler.connect(app, '/api')
 j = jenkins.Jenkins("http://127.1:8080", 'rpcuser', '2266bcc74441b07e9c50ba468a620199')
+manager_host = '10.1.2.49'
+app_root = "/opt/scm-manager"
+package_root = "/opt/scm-manager/wars"
+tomcat_root_7 = "/home/scm/apache-tomcat-7.0.39"
+tomcat_root_8 = "/home/mes/apache-tomcat-8.0.24"
+tomcat_root_cscm = "/home/cscm/apache-tomcat-7.0.39"
+tomcat_root_iscm = "/home/iscm/apache-tomcat-7.0.39"
+tomcat_root_jco = "/var/lib/apache-tomcat-7.0.64"
+tomcat_root_fedex = "/home/scm/instance/fedex"
+version = "1.0.3"
+
+cscm_user = "cscm"
+iscm_user = "iscm"
+scm_user = "scm"
+mes_user = "mes"
+jco_user = "root"
+
 
 @handler.register
 def Hello(name='follow'):
@@ -93,11 +109,11 @@ def DoCmd(operate, node_info, is_quartz):
                        " cp -ap {}/{}/*.war {}/webapps/{}".format(tomcat_root,
                                                                   tomcat_root,
                                                                   get_package_prefix(system),
-                                                                  app.config['RR_PACKAGE_ROOT'],
+                                                                  package_root,
                                                                   node_info,
                                                                   tomcat_root,
                                                                   package_name)
-        copy_release = "cp -ap {}/{}/*.war {}/release-{}/".format(app.config['RR_PACKAGE_ROOT'], node_info, app.config['RR_PACKAGE_ROOT'], node_info)
+        copy_release = "cp -ap {}/{}/*.war {}/release-{}/".format(package_root, node_info, package_root, node_info)
         unzip_command = "sudo -u {} unzip -qo {}/webapps/{} -d {}/webapps/{}".format(tomcat_user, tomcat_root,
                                                                                      package_name, tomcat_root,
                                                                                      get_package_prefix(system))
@@ -137,14 +153,14 @@ def GetProcessInfo(system, ver):
         'netstat -nlp | grep :{} | awk \'{{print $7}}\' | cut -d / -f 1'.format(tomcat_port))
     status['qa_mtime'] = commands.getoutput(
         'stat  {}/webapps/{} | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(tomcat_root, package_name))
-    status['newest_filename'] = commands.getoutput('ls {}/{}-{}/'.format(app.config['RR_PACKAGE_ROOT'], system, ver)).lstrip()
+    status['newest_filename'] = commands.getoutput('ls {}/{}-{}/'.format(package_root, system, ver)).lstrip()
     status['aria_status'] = commands.getstatusoutput('ps -ef| grep aria| grep -v grep')
     status['newest_mtime'] = commands.getoutput(
-        'stat  {}/{}-{}/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(app.config['RR_PACKAGE_ROOT'], system,
+        'stat  {}/{}-{}/*.war | grep \'^Modify\' | cut  -d " " -f 2-3 | cut -d . -f1'.format(package_root, system,
                                                                                              ver))
     status['load_info'] = commands.getoutput(' w |grep \'load\' | cut -d , -f 4,5,6')
     status['release'] = get_release_info(system, ver)
-    status['ver'] = app.config['RR_VERSION']
+    status['ver'] = version
     if pidinfo[1] == "":
         return status
     else:
@@ -168,8 +184,8 @@ def GetBuildInfo(name, number):
 
 @handler.register
 def DownloadPackage(path, filename):
-    file_url = "http://{}:{}/uploaded_file/{}?folder=SCM-{}".format(app.config['RR_MANAGER_HOST'], "80", filename, path)
-    download_dir = "{}/wars/{}".format(app.config['RR_APP_ROOT'], path)
+    file_url = "http://{}:{}/uploaded_file/{}?folder=SCM-{}".format(manager_host, "80", filename, path)
+    download_dir = "{}/wars/{}".format(app_root, path)
     download_command = "aria2c -s 2 -x 2 {} -d {} -D".format(file_url, download_dir)
     print "Start to download file {}".format(download_command)
     commands.getoutput("rm -f {}/*.war".format(download_dir))
@@ -188,7 +204,7 @@ def UpdateZipFile(filename, system):
             time.sleep(1)
         else:
             unzip_info = commands.getstatusoutput(
-                "sudo -u {} unzip -o {}/wars/zipfiles/{} -d {}/webapps/{}".format(tomcat_user, app.config['RR_APP_ROOT'], filename,
+                "sudo -u {} unzip -o {}/wars/zipfiles/{} -d {}/webapps/{}".format(tomcat_user, app_root, filename,
                                                                                   tomcat_root,
                                                                                   get_package_prefix(system)))
             break
@@ -199,9 +215,9 @@ def UpdateZipFile(filename, system):
 @handler.register
 def SwitchRelease(release, node_info):
     try:
-        select_release = "{}/release-{}/{}".format(app.config['RR_PACKAGE_ROOT'], node_info, release)
-        current_release = " {}/{}/*.war".format(app.config['RR_PACKAGE_ROOT'], node_info)
-        cmd = "rm -f {}; cp -p {} {}/{}/".format(current_release, select_release, app.config['RR_PACKAGE_ROOT'], node_info)
+        select_release = "{}/release-{}/{}".format(package_root, node_info, release)
+        current_release = " {}/{}/*.war".format(package_root, node_info)
+        cmd = "rm -f {}; cp -p {} {}/{}/".format(current_release, select_release, package_root, node_info)
         status = subprocess.call(cmd, shell=True)
     except Exception, e:
         status = 1
@@ -209,7 +225,7 @@ def SwitchRelease(release, node_info):
 
 
 def get_release_info(system, ver):
-    file_path = "{}/release-{}-{}/".format(app.config['RR_PACKAGE_ROOT'], system, ver)
+    file_path = "{}/release-{}-{}/".format(package_root, system, ver)
     release = {}
     if not os.path.exists(file_path):
         os.mkdir(file_path)
@@ -232,19 +248,19 @@ def get_release_info(system, ver):
 
 def get_tomcat_root(system):
     if re.match('manufacturing', system):
-        tomcat_root = app.config['RR_TOMCAT_ROOT_8']
+        tomcat_root = tomcat_root_8
     elif re.match('material', system):
-        tomcat_root = app.config['RR_TOMCAT_ROOT_8']
+        tomcat_root = tomcat_root_8
     elif re.match('cnshipping', system):
-        tomcat_root = app.config['RR_TOMCAT_ROOT_CSCM']
+        tomcat_root = tomcat_root_cscm
     elif re.match('usshipping', system):
-        tomcat_root = app.config['RR_TOMCAT_ROOT_ISCM']
+        tomcat_root = tomcat_root_iscm
     elif re.match("jco", system):
-        tomcat_root = app.config['RR_TOMCAT_ROOT_JCO']
+        tomcat_root = tomcat_root_jco
     elif re.match("fedexClient", system):
-        tomcat_root = app.config['RR_TOMCAT_ROOT_FEDEX']
+        tomcat_root = tomcat_root_fedex
     else:
-        tomcat_root = app.config['RR_TOMCAT_ROOT_7']
+        tomcat_root = tomcat_root_7
     return tomcat_root
 
 
@@ -264,15 +280,15 @@ def get_package_prefix(system):
 
 def get_tomcat_user(system):
     if re.match("cnshipping", system):
-        user = app.config['RR_CSCM_USER']
+        user = cscm_user
     elif re.match("usshipping", system):
-        user = app.config['RR_ISCM_USER']
+        user = iscm_user
     elif re.match("jco", system):
-        user = app.config['RR_JCO_USER']
+        user = jco_user
     elif re.match("manufacturing|material", system):
-        user = app.config['RR_MES_USER']
+        user = mes_user
     else:
-        user = app.config['RR_SCM_USER']
+        user = scm_user
     return user
 
 
